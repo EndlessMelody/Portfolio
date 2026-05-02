@@ -1,0 +1,905 @@
+.projects {
+  position: relative;
+  padding: 6rem 0 4.5rem;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+// =====================================================
+// AMBIENT BACKDROPS (match About/Skills)
+// =====================================================
+.bgGrid,
+.bgDotsTl,
+.bgDotsBr,
+.bgGradient {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bgGrid {
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(244, 122, 160, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90, 150, 238, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(
+    ellipse 70% 55% at center,
+    black 25%,
+    transparent 80%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 55% at center,
+    black 25%,
+    transparent 80%
+  );
+}
+
+.bgDotsTl,
+.bgDotsBr {
+  width: 300px;
+  height: 300px;
+  background-image: radial-gradient(
+    circle,
+    var(--pink-300) 1.4px,
+    transparent 1.6px
+  );
+  background-size: 14px 14px;
+  opacity: 0.28;
+}
+
+.bgDotsTl {
+  top: 3rem;
+  left: -50px;
+  mask-image: radial-gradient(ellipse at top left, black, transparent 70%);
+  -webkit-mask-image: radial-gradient(
+    ellipse at top left,
+    black,
+    transparent 70%
+  );
+}
+
+.bgDotsBr {
+  bottom: 2rem;
+  right: -40px;
+  background-image: radial-gradient(
+    circle,
+    var(--blue-300) 1.4px,
+    transparent 1.6px
+  );
+  mask-image: radial-gradient(ellipse at bottom right, black, transparent 70%);
+  -webkit-mask-image: radial-gradient(
+    ellipse at bottom right,
+    black,
+    transparent 70%
+  );
+}
+
+.bgGradient {
+  inset: 0;
+  background:
+    radial-gradient(
+      55% 45% at 75% 25%,
+      rgba(255, 182, 200, 0.2),
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 45% at 20% 75%,
+      rgba(159, 197, 255, 0.18),
+      transparent 75%
+    ),
+    radial-gradient(
+      40% 40% at 55% 88%,
+      rgba(200, 182, 255, 0.2),
+      transparent 80%
+    );
+}
+
+// =====================================================
+// SPINES (kanji + issue tag)
+// =====================================================
+.kanjiSpine {
+  position: absolute;
+  top: 14%;
+  left: 1.2%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.05em;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(3.5rem, 6vw, 6.5rem);
+  line-height: 1;
+  z-index: 1;
+  user-select: none;
+  pointer-events: none;
+  text-orientation: upright;
+
+  span {
+    background: linear-gradient(
+      180deg,
+      var(--pink-300),
+      var(--lavender-300),
+      var(--blue-300)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    opacity: 0.15;
+    &:nth-child(1) {
+      animation: drift-y 7s var(--ease-soft) infinite;
+    }
+    &:nth-child(2) {
+      animation: drift-y 7s var(--ease-soft) infinite 1s;
+    }
+    &:nth-child(3) {
+      animation: drift-y 7s var(--ease-soft) infinite 2s;
+    }
+  }
+  [data-theme="dark"] & span {
+    opacity: 0.2;
+  }
+
+  @media (max-width: 1280px) {
+    display: none;
+  }
+}
+
+.issueTag {
+  position: absolute;
+  top: 50%;
+  right: 0.85rem;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  writing-mode: vertical-rl;
+  opacity: 0.5;
+  z-index: 2;
+  user-select: none;
+  pointer-events: none;
+
+  @media (max-width: 1280px) {
+    display: none;
+  }
+}
+
+// =====================================================
+// FIREFLY PARTICLES
+// =====================================================
+.fireflies {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.firefly {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--pink-300);
+  filter: drop-shadow(0 0 6px var(--pink-400));
+  opacity: 0;
+  animation: float-firefly 8s ease-in-out infinite;
+
+  &:nth-child(even) {
+    background: var(--blue-300);
+    filter: drop-shadow(0 0 6px var(--blue-400));
+    width: 3px;
+    height: 3px;
+  }
+}
+
+@keyframes float-firefly {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.8);
+  }
+  20% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-40px) scale(1.2);
+  }
+  80% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-80px) scale(0.8);
+  }
+}
+
+// =====================================================
+// HEADER
+// =====================================================
+.header {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: fade-up 0.8s var(--ease-soft) both;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.chapter {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.3rem 0.95rem 0.3rem 1.1rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(244, 122, 160, 0.12);
+}
+
+.chapterBar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 70%;
+  background: linear-gradient(180deg, var(--pink-400), var(--blue-400));
+  border-radius: 2px;
+}
+
+.chapterNo {
+  color: var(--pink-500);
+  font-family: var(--font-mono);
+}
+.chapterSep {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+.chapterLabel {
+  color: var(--text-primary);
+}
+.chapterKana {
+  font-family: var(--font-hand);
+  letter-spacing: 0.15em;
+  color: var(--blue-500);
+  margin-left: 0.25rem;
+  font-weight: 500;
+}
+
+.title {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 4.2vw, 3.2rem);
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1;
+}
+
+// =====================================================
+// TITLE SPARKLES
+// =====================================================
+.titleSparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  svg {
+    position: absolute;
+    animation: twinkle 3s ease-in-out infinite alternate;
+  }
+}
+
+.sparkle1 {
+  top: -10px;
+  right: 20%;
+  width: 24px;
+  color: var(--pink-300);
+  animation-delay: 0s !important;
+}
+
+.sparkle2 {
+  top: 15px;
+  right: 15%;
+  width: 14px;
+  color: var(--blue-300);
+  animation-delay: 1s !important;
+}
+
+.sparkle3 {
+  bottom: -5px;
+  right: 35%;
+  width: 18px;
+  color: var(--lavender-300);
+  animation-delay: 2s !important;
+}
+
+@keyframes twinkle {
+  0% { transform: scale(0.5) rotate(0deg); opacity: 0.4; filter: drop-shadow(0 0 2px currentColor); }
+  100% { transform: scale(1.1) rotate(15deg); opacity: 1; filter: drop-shadow(0 0 8px currentColor); }
+}
+
+.titleAccent {
+  background: linear-gradient(
+    120deg,
+    var(--pink-500),
+    var(--pink-400) 30%,
+    var(--lavender-300) 55%,
+    var(--blue-400) 80%,
+    var(--blue-500)
+  );
+  background-size: 220% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-shift 7s ease infinite;
+  filter: drop-shadow(0 6px 20px rgba(244, 122, 160, 0.22));
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* ========================================= */
+/* 3D Grimoire Book Styles                   */
+/* ========================================= */
+
+.bookContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  perspective: 2500px;
+  margin: 3rem auto;
+  width: 100%;
+  position: relative;
+}
+
+// =====================================================
+// MAGIC ALTAR (under book)
+// =====================================================
+.altarWrap {
+  position: absolute;
+  bottom: -40px; /* shift down so book floats over it */
+  left: 50%;
+  transform: translateX(-50%) rotateX(75deg);
+  width: 800px;
+  height: 800px;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  z-index: -1;
+  opacity: 0.6;
+
+  @media (max-width: 1024px) {
+    width: 600px;
+    height: 600px;
+    bottom: -20px;
+  }
+}
+
+.altarGlow {
+  position: absolute;
+  inset: 100px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(244, 122, 160, 0.15) 0%,
+    transparent 60%
+  );
+  filter: blur(20px);
+}
+
+.altarRingOuter, .altarRingInner {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  transform-origin: center;
+}
+
+.altarRingOuter {
+  inset: 0;
+  border-top-color: var(--pink-400);
+  border-bottom-color: var(--blue-400);
+  animation: spin-altar 20s linear infinite;
+  opacity: 0.3;
+}
+
+.altarRingInner {
+  inset: 60px;
+  border-left-color: var(--lavender-300);
+  border-right-color: var(--pink-300);
+  animation: spin-altar 15s linear infinite reverse;
+  opacity: 0.4;
+  border-style: dashed;
+}
+
+@keyframes spin-altar {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.floatingRunes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.rune {
+  position: absolute;
+  bottom: 0;
+  color: var(--pink-400);
+  font-family: var(--font-hand);
+  font-size: 1.5rem;
+  opacity: 0;
+  filter: drop-shadow(0 0 5px var(--pink-500));
+  animation: floatRune 15s linear infinite;
+  transform: rotateX(-90deg); /* Counteract the 75deg altar tilt to stand upright */
+}
+
+@keyframes floatRune {
+  0% { transform: translateY(0) rotateX(-90deg) scale(0.5); opacity: 0; }
+  20% { opacity: 0.6; }
+  80% { opacity: 0.6; }
+  100% { transform: translateY(-800px) rotateX(-90deg) scale(1.5); opacity: 0; }
+}
+
+.book {
+  position: relative;
+  width: 900px;
+  height: 550px;
+  /* subtle float */
+  animation: floatBook 6s ease-in-out infinite;
+
+  @media (max-width: 1024px) {
+    width: 700px;
+    height: 450px;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    max-width: 500px;
+    height: 600px;
+  }
+}
+
+.bookInner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+@keyframes floatBook {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.leaf {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform-origin: left center;
+  transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.leaf.turned {
+  transform: rotateY(-180deg);
+}
+
+.pageFront, .pageBack {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 2px 16px 16px 2px;
+  overflow: hidden;
+  background: #0d0d12; /* Solid color to prevent transparent bleed-through */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.pageFront {
+  transform: rotateY(0deg);
+  /* Inner shadow imitating the deep spine groove on right pages */
+  box-shadow: inset 30px 0 40px -10px rgba(0,0,0,0.7), 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.pageBack {
+  transform: rotateY(180deg);
+  /* Flip the border radius for the left pages */
+  border-radius: 16px 2px 2px 16px;
+  /* Inner shadow imitating the spine groove on left pages */
+  box-shadow: inset -30px 0 40px -10px rgba(0,0,0,0.7), 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* ========================================= */
+/* Content Inside Pages                      */
+/* ========================================= */
+
+.outerCover {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, #1a1a24 0%, #08080a 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  /* Leather/Magical cover styling */
+  border-left: 20px solid #050508; /* Dark spine */
+  box-shadow: inset 0 0 80px rgba(0,0,0,0.9), inset 5px 0 10px rgba(255,255,255,0.05);
+
+  .spineTexture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 25px;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 10px,
+      rgba(255,255,255,0.02) 10px,
+      rgba(255,255,255,0.02) 11px
+    );
+    border-right: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .coverCorners {
+    position: absolute;
+    inset: 15px;
+    border: 1px solid rgba(244, 122, 160, 0.15);
+    pointer-events: none;
+    span {
+      position: absolute;
+      color: var(--pink-400);
+      font-size: 1.5rem;
+      opacity: 0.5;
+      filter: drop-shadow(0 0 5px var(--pink-500));
+    }
+    .cTl { top: -10px; left: -10px; }
+    .cTr { top: -10px; right: -10px; }
+    .cBl { bottom: -10px; left: -10px; }
+    .cBr { bottom: -10px; right: -10px; }
+  }
+
+  .magicSeal {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+
+    .magicCircleSvg {
+      width: 80%;
+      max-width: 400px;
+      height: auto;
+      color: var(--blue-400);
+      opacity: 0.15;
+      animation: spin-altar 40s linear infinite;
+      filter: drop-shadow(0 0 10px var(--blue-500));
+    }
+
+    &[data-end="true"] .magicCircleSvg {
+      color: var(--pink-400);
+      opacity: 0.1;
+      filter: drop-shadow(0 0 10px var(--pink-500));
+      /* Cracked/faded look for the end cover */
+      mask-image: radial-gradient(circle, transparent 20%, black 80%);
+      -webkit-mask-image: radial-gradient(circle, transparent 20%, black 80%);
+    }
+  }
+
+  .coverTitleBox {
+    position: relative;
+    z-index: 2;
+    padding: 2rem 3rem;
+    background: rgba(10, 10, 15, 0.6);
+    border: 1px solid rgba(244, 122, 160, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 4px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(244, 122, 160, 0.05);
+
+    .coverLabel {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--lavender-300);
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 3.5rem;
+      font-family: var(--font-display);
+      color: white;
+      text-shadow: 0 0 20px rgba(255,255,255,0.4), 0 0 50px rgba(244, 122, 160, 0.4);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    p {
+      color: var(--pink-300);
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+.imageSide {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Overlaid on the inline style background */
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, rgba(0,0,0,0.6), rgba(0,0,0,0.2));
+  }
+
+  .mysticOverlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.8) 100%);
+    z-index: 1;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+
+  .kanjiDeco {
+    font-size: 14rem;
+    color: rgba(255,255,255,0.15);
+    font-family: var(--font-display);
+    mix-blend-mode: overlay;
+    font-weight: 900;
+    z-index: 2;
+  }
+}
+
+.projectContent {
+  width: 100%;
+  height: 100%;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, rgba(20, 20, 25, 0.95), rgba(10, 10, 15, 0.98));
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(244, 122, 160, 0.08), transparent 50%),
+                radial-gradient(circle at bottom left, rgba(90, 150, 238, 0.08), transparent 50%);
+    pointer-events: none;
+  }
+}
+
+// =========================================
+// Arcane Page Layout
+// =========================================
+.pageBorderTop, .pageBorderBottom {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--pink-300);
+  opacity: 0.5;
+  margin-bottom: 2rem;
+
+  .cornerL, .cornerR {
+    font-size: 1.2rem;
+    line-height: 1;
+    filter: drop-shadow(0 0 5px var(--pink-400));
+  }
+
+  .line {
+    flex-grow: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--pink-400), transparent);
+  }
+}
+
+.pageBorderBottom {
+  margin-top: auto;
+  margin-bottom: 0;
+}
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+
+  .spellNumber {
+    color: var(--pink-400);
+  }
+
+  .spellClass {
+    opacity: 0.7;
+  }
+}
+
+.projectTitle {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+  font-family: var(--font-display);
+  position: relative;
+  z-index: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.titleUnderline {
+  width: 60px;
+  height: 2px;
+  background: var(--pink-500);
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 10px var(--pink-400);
+}
+
+.projectDescWrapper {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 2.5rem;
+}
+
+.dropCap {
+  float: left;
+  font-family: var(--font-display);
+  font-size: 4.5rem;
+  line-height: 0.8;
+  padding-right: 0.75rem;
+  padding-top: 0.2rem;
+  color: var(--lavender-300);
+  text-shadow: 0 0 15px var(--lavender-400);
+}
+
+.projectDesc {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  font-size: 1rem;
+  text-align: justify;
+}
+
+.techRunes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+
+  .runeTag {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.9rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 2px;
+    color: var(--blue-300);
+    text-shadow: 0 0 5px rgba(90, 150, 238, 0.4);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+}
+
+.pageFooter {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2rem;
+}
+
+
+
+.links {
+  display: flex;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 0.85rem 1.5rem;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+
+    &.linkPrimary {
+      background: rgba(236, 72, 153, 0.15);
+      border-color: rgba(236, 72, 153, 0.5);
+      color: var(--pink-300);
+      box-shadow: 0 0 15px rgba(236, 72, 153, 0.2), inset 0 0 10px rgba(236, 72, 153, 0.1);
+      &:hover {
+        background: rgba(236, 72, 153, 0.25);
+        border-color: rgba(236, 72, 153, 0.8);
+        transform: translateY(-2px);
+        box-shadow: 0 0 25px rgba(236, 72, 153, 0.4), inset 0 0 15px rgba(236, 72, 153, 0.2);
+        color: white;
+      }
+    }
+
+    &.linkGhost {
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-primary);
+      border-color: rgba(255, 255, 255, 0.15);
+      &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+}
+
+.navBtn {
+  background: var(--bg-elevated);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: white;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+
+  &:hover:not(:disabled) {
+    background: var(--pink-500);
+    border-color: var(--pink-500);
+    transform: scale(1.1);
+    box-shadow: 0 10px 25px rgba(236, 72, 153, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+    transform: none;
+  }
+}

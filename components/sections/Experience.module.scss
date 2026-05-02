@@ -1,0 +1,592 @@
+.experience {
+  position: relative;
+  padding: 6rem 0 4.5rem;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+// =====================================================
+// AMBIENT BACKDROPS (match About/Skills/Projects)
+// =====================================================
+.bgGrid,
+.bgDotsTl,
+.bgDotsBr,
+.bgGradient {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bgGrid {
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(244, 122, 160, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90, 150, 238, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(
+    ellipse 70% 55% at center,
+    black 25%,
+    transparent 80%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 55% at center,
+    black 25%,
+    transparent 80%
+  );
+}
+
+.bgDotsTl,
+.bgDotsBr {
+  width: 300px;
+  height: 300px;
+  background-image: radial-gradient(
+    circle,
+    var(--pink-300) 1.4px,
+    transparent 1.6px
+  );
+  background-size: 14px 14px;
+  opacity: 0.28;
+}
+
+.bgDotsTl {
+  top: 3rem;
+  left: -50px;
+  mask-image: radial-gradient(ellipse at top left, black, transparent 70%);
+  -webkit-mask-image: radial-gradient(
+    ellipse at top left,
+    black,
+    transparent 70%
+  );
+}
+
+.bgDotsBr {
+  bottom: 2rem;
+  right: -40px;
+  background-image: radial-gradient(
+    circle,
+    var(--blue-300) 1.4px,
+    transparent 1.6px
+  );
+  mask-image: radial-gradient(ellipse at bottom right, black, transparent 70%);
+  -webkit-mask-image: radial-gradient(
+    ellipse at bottom right,
+    black,
+    transparent 70%
+  );
+}
+
+.bgGradient {
+  inset: 0;
+  background:
+    radial-gradient(
+      55% 45% at 75% 25%,
+      rgba(255, 182, 200, 0.2),
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 45% at 20% 75%,
+      rgba(159, 197, 255, 0.18),
+      transparent 75%
+    ),
+    radial-gradient(
+      40% 40% at 55% 88%,
+      rgba(200, 182, 255, 0.2),
+      transparent 80%
+    );
+}
+
+// =====================================================
+// SPINES (kanji + issue tag)
+// =====================================================
+.kanjiSpine {
+  position: absolute;
+  top: 14%;
+  left: 1.2%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.05em;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(3.5rem, 6vw, 6.5rem);
+  line-height: 1;
+  z-index: 1;
+  user-select: none;
+  pointer-events: none;
+  text-orientation: upright;
+
+  span {
+    background: linear-gradient(
+      180deg,
+      var(--pink-300),
+      var(--lavender-300),
+      var(--blue-300)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    opacity: 0.15;
+    &:nth-child(1) {
+      animation: drift-y 7s var(--ease-soft) infinite;
+    }
+    &:nth-child(2) {
+      animation: drift-y 7s var(--ease-soft) infinite 1s;
+    }
+    &:nth-child(3) {
+      animation: drift-y 7s var(--ease-soft) infinite 2s;
+    }
+  }
+  [data-theme="dark"] & span {
+    opacity: 0.2;
+  }
+
+  @media (max-width: 1280px) {
+    display: none;
+  }
+}
+
+.issueTag {
+  position: absolute;
+  top: 50%;
+  right: 0.85rem;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  writing-mode: vertical-rl;
+  opacity: 0.5;
+  z-index: 2;
+  user-select: none;
+  pointer-events: none;
+
+  @media (max-width: 1280px) {
+    display: none;
+  }
+}
+
+// =====================================================
+// FIREFLY PARTICLES
+// =====================================================
+.fireflies {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.firefly {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--pink-300);
+  filter: drop-shadow(0 0 6px var(--pink-400));
+  opacity: 0;
+  animation: float-firefly 8s ease-in-out infinite;
+
+  &:nth-child(even) {
+    background: var(--blue-300);
+    filter: drop-shadow(0 0 6px var(--blue-400));
+    width: 3px;
+    height: 3px;
+  }
+}
+
+@keyframes float-firefly {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.8);
+  }
+  20% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-40px) scale(1.2);
+  }
+  80% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-80px) scale(0.8);
+  }
+}
+
+// =====================================================
+// STAR MAP AMBIENT (unique to Experience)
+// =====================================================
+.bgStars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, rgba(191, 219, 254, 0.5), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(244, 122, 160, 0.4), transparent),
+    radial-gradient(2px 2px at 50px 160px, rgba(191, 219, 254, 0.3), transparent),
+    radial-gradient(2px 2px at 90px 40px, rgba(244, 122, 160, 0.3), transparent),
+    radial-gradient(2px 2px at 130px 80px, rgba(191, 219, 254, 0.5), transparent),
+    radial-gradient(1px 1px at 170px 120px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 60px 200px, rgba(255, 255, 255, 0.25), transparent);
+  background-repeat: repeat;
+  background-size: 200px 250px;
+  opacity: 0.6;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bgNebula {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 25% 40%, rgba(244, 122, 160, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 75% 60%, rgba(191, 219, 254, 0.06) 0%, transparent 50%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+// =====================================================
+// HEADER
+// =====================================================
+.header {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: fade-up 0.8s var(--ease-soft) both;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.chapter {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.3rem 0.95rem 0.3rem 1.1rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(244, 122, 160, 0.12);
+}
+
+.chapterBar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 70%;
+  background: linear-gradient(180deg, var(--pink-400), var(--blue-400));
+  border-radius: 2px;
+}
+
+.chapterNo {
+  color: var(--pink-500);
+  font-family: var(--font-mono);
+}
+.chapterSep {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+.chapterLabel {
+  color: var(--text-primary);
+}
+.chapterKana {
+  font-family: var(--font-hand);
+  letter-spacing: 0.15em;
+  color: var(--blue-500);
+  margin-left: 0.25rem;
+  font-weight: 500;
+}
+
+.title {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 4.2vw, 3.2rem);
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1;
+}
+
+.titleAccent {
+  background: linear-gradient(
+    120deg,
+    var(--pink-500),
+    var(--pink-400) 30%,
+    var(--lavender-300) 55%,
+    var(--blue-400) 80%,
+    var(--blue-500)
+  );
+  background-size: 220% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-shift 7s ease infinite;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+// =====================================================
+// CONSTELLATION LAYOUT
+// =====================================================
+.constellation {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 4rem;
+  z-index: 2;
+  min-height: 520px;
+  align-items: center;
+}
+
+/* SVG lines behind everything */
+.lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+// =====================================================
+// EACH NODE (Star + Connector + Card)
+// =====================================================
+.node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+.nodeTop {
+  align-self: start;
+  flex-direction: column-reverse;
+}
+
+.nodeBottom {
+  align-self: end;
+}
+
+// =====================================================
+// STAR
+// =====================================================
+.starNode {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 3;
+}
+
+.star {
+  font-size: 1.5rem;
+  color: var(--blue-300);
+  transition: all 0.5s ease;
+  filter: drop-shadow(0 0 8px var(--blue-400));
+  animation: twinkle 4s ease-in-out infinite alternate;
+}
+
+.starGlow {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(191, 219, 254, 0.6) 0%, transparent 70%);
+  opacity: 0.3;
+  transition: all 0.4s ease;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.15) rotate(10deg); }
+}
+
+// =====================================================
+// CONNECTOR
+// =====================================================
+.connector {
+  width: 1px;
+  height: 24px;
+  background: linear-gradient(
+    180deg,
+    rgba(191, 219, 254, 0.5),
+    rgba(191, 219, 254, 0.1)
+  );
+  flex-shrink: 0;
+}
+
+.nodeTop .connector {
+  background: linear-gradient(
+    180deg,
+    rgba(191, 219, 254, 0.1),
+    rgba(191, 219, 254, 0.5)
+  );
+}
+
+// =====================================================
+// CARD
+// =====================================================
+.card {
+  position: relative;
+  padding: 1.4rem 1.5rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  transition: all 0.4s ease;
+  overflow: hidden;
+  width: 100%;
+}
+
+.node:hover {
+  z-index: 10;
+
+  .star {
+    transform: scale(1.5) rotate(45deg);
+    color: var(--pink-300);
+    filter: drop-shadow(0 0 12px var(--pink-400));
+  }
+  .starGlow {
+    opacity: 0.8;
+    transform: scale(1.8);
+  }
+  .card {
+    transform: translateY(-4px);
+    border-color: rgba(191, 219, 254, 0.5);
+    box-shadow:
+      0 8px 30px rgba(191, 219, 254, 0.15),
+      0 0 0 1px rgba(191, 219, 254, 0.1);
+  }
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.period {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  padding: 0.25rem 0.55rem;
+  background: var(--bg-muted);
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+}
+
+.statusPing {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--pink-500);
+  box-shadow: 0 0 10px var(--pink-400);
+  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+.role {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.15rem;
+}
+
+.company {
+  font-size: 0.88rem;
+  color: var(--blue-400);
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.desc {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+}
+
+.tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+
+  li {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-full);
+    color: var(--text-secondary);
+    background: rgba(191, 219, 254, 0.05);
+    border: 1px solid rgba(191, 219, 254, 0.15);
+    transition: all 0.2s;
+
+    &:hover {
+      background: rgba(191, 219, 254, 0.15);
+      border-color: var(--blue-300);
+      color: var(--blue-400);
+    }
+  }
+}
+
+// =====================================================
+// RESPONSIVE
+// =====================================================
+@media (max-width: 1024px) {
+  .constellation {
+    grid-template-columns: repeat(2, 1fr);
+    min-height: auto;
+    gap: 2rem;
+  }
+  .nodeTop, .nodeBottom {
+    align-self: auto;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 640px) {
+  .constellation {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}

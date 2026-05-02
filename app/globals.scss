@@ -1,0 +1,146 @@
+@use "./theme.scss";
+@use "./animations.scss";
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  transition: background-color 0.4s var(--ease-soft), color 0.4s var(--ease-soft);
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 10%, rgba(255, 209, 220, 0.45), transparent 60%),
+    radial-gradient(ellipse 50% 50% at 80% 20%, rgba(191, 219, 254, 0.5), transparent 60%),
+    radial-gradient(ellipse 40% 40% at 50% 90%, rgba(224, 212, 255, 0.35), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.4s var(--ease-soft);
+}
+
+[data-theme="dark"] body::before {
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 10%, rgba(159, 130, 255, 0.18), transparent 60%),
+    radial-gradient(ellipse 50% 50% at 80% 20%, rgba(127, 179, 255, 0.15), transparent 60%),
+    radial-gradient(ellipse 40% 40% at 50% 90%, rgba(255, 159, 184, 0.12), transparent 60%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: var(--pink-200);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] ::selection {
+  background: var(--lavender-300);
+  color: var(--text-inverse);
+}
+
+// Custom scrollbar
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-muted); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--pink-300), var(--blue-300));
+  border-radius: var(--radius-full);
+  border: 2px solid var(--bg-muted);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--pink-400), var(--blue-400));
+}
+
+// Typography helpers
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--text-primary);
+}
+
+h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); }
+h2 { font-size: clamp(2rem, 4vw, 3rem); }
+h3 { font-size: clamp(1.4rem, 2.5vw, 1.75rem); }
+
+p { color: var(--text-secondary); }
+
+// Layout utilities
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+}
+
+section {
+  padding: 6rem 0;
+  position: relative;
+  scroll-margin-top: 80px;
+}
+
+@media (max-width: 768px) {
+  section { padding: 4rem 0; }
+}
+
+// Reveal-on-scroll utility (hooked from JS via IntersectionObserver)
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s var(--ease-soft), transform 0.8s var(--ease-soft);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

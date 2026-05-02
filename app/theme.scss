@@ -1,0 +1,126 @@
+// =====================================================
+// Anime Pastel Theme — Pink × Blue × Lavender
+// Light mode: soft daydream | Dark mode: starry night
+// =====================================================
+
+:root {
+  // Brand pastel scale — Pink (sakura)
+  --pink-50: #fff5f8;
+  --pink-100: #ffe4ec;
+  --pink-200: #ffd1dc;
+  --pink-300: #ffb6c8;
+  --pink-400: #ff9fb8;
+  --pink-500: #f47aa0;
+  --pink-600: #d85f87;
+
+  // Brand pastel scale — Blue (sky)
+  --blue-50: #f0f7ff;
+  --blue-100: #e0eeff;
+  --blue-200: #bfdbfe;
+  --blue-300: #9ec5ff;
+  --blue-400: #7fb3ff;
+  --blue-500: #5a96ee;
+  --blue-600: #3f7bd2;
+
+  // Accents
+  --lavender-200: #e0d4ff;
+  --lavender-300: #c8b6ff;
+  --cream-100: #fff8e7;
+  --cream-200: #fff1d6;
+  --mint-200: #c8f0e0;
+
+  // Easings & radii
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --shadow-soft:
+    0 4px 20px rgba(255, 159, 184, 0.18), 0 2px 6px rgba(127, 179, 255, 0.12);
+  --shadow-glow:
+    0 0 32px rgba(255, 182, 200, 0.45), 0 0 12px rgba(159, 197, 255, 0.35);
+  --shadow-card:
+    0 10px 30px -8px rgba(216, 95, 135, 0.18),
+    0 4px 12px rgba(127, 179, 255, 0.1);
+
+  // Fonts — anime-novel display + japanese-aware body + manga handwritten accent
+  --font-display:
+    var(--font-kaisei), "Kaisei Decol", "Zen Maru Gothic", "M PLUS Rounded 1c",
+    system-ui, serif;
+  --font-body:
+    var(--font-zen), "Zen Kaku Gothic New", "Inter", system-ui, -apple-system,
+    sans-serif;
+  --font-hand: var(--font-klee), "Klee One", "Kaisei Decol", cursive;
+  --font-mono:
+    var(--font-mono), "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+}
+
+// =================== LIGHT MODE ===================
+[data-theme="light"] {
+  --bg-base: #fff8fb;
+  --bg-elevated: #ffffff;
+  --bg-muted: #fff0f5;
+  --bg-tinted: linear-gradient(135deg, #ffe4ec 0%, #e0d4ff 50%, #bfdbfe 100%);
+
+  --text-primary: #2a1f3d;
+  --text-secondary: #6b5b80;
+  --text-muted: #9c8fb0;
+  --text-inverse: #ffffff;
+
+  --border-subtle: rgba(255, 159, 184, 0.2);
+  --border-default: rgba(127, 179, 255, 0.25);
+
+  --primary: var(--pink-400);
+  --primary-hover: var(--pink-500);
+  --secondary: var(--blue-400);
+  --secondary-hover: var(--blue-500);
+  --accent: var(--lavender-300);
+
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 209, 220, 0.4);
+
+  --hp-color: #ff9fb8;
+  --mp-color: #7fb3ff;
+  --xp-color: #c8b6ff;
+}
+
+// =================== DARK MODE ===================
+[data-theme="dark"] {
+  --bg-base: #0f0a1f;
+  --bg-elevated: #1a1330;
+  --bg-muted: #15102a;
+  --bg-tinted: linear-gradient(135deg, #2a1f4d 0%, #1f1a3d 50%, #14182f 100%);
+
+  --text-primary: #f5e8ff;
+  --text-secondary: #c0b3d6;
+  --text-muted: #8a7fa3;
+  --text-inverse: #0f0a1f;
+
+  --border-subtle: rgba(200, 182, 255, 0.15);
+  --border-default: rgba(159, 197, 255, 0.2);
+
+  --primary: var(--pink-300);
+  --primary-hover: var(--pink-200);
+  --secondary: var(--blue-300);
+  --secondary-hover: var(--blue-200);
+  --accent: var(--lavender-200);
+
+  --glass-bg: rgba(26, 19, 48, 0.6);
+  --glass-border: rgba(200, 182, 255, 0.18);
+
+  --hp-color: #ffb6c8;
+  --mp-color: #9ec5ff;
+  --xp-color: #c8b6ff;
+
+  --shadow-soft:
+    0 4px 20px rgba(159, 130, 255, 0.25), 0 2px 6px rgba(127, 179, 255, 0.18);
+  --shadow-glow:
+    0 0 32px rgba(200, 182, 255, 0.35), 0 0 12px rgba(159, 197, 255, 0.4);
+  --shadow-card:
+    0 10px 30px -8px rgba(40, 20, 80, 0.5), 0 4px 12px rgba(127, 179, 255, 0.18);
+}

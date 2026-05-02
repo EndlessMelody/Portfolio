@@ -1,0 +1,1548 @@
+// =====================================================
+// About — VN-style branching dialogue scene
+// Narrator: Selena (Melody's assistant)
+// Decorated to match the Hero section language
+// =====================================================
+
+.about {
+  position: relative;
+  padding: 3rem 0 4rem;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+// =====================================================
+// AMBIENT BACKDROPS (match Hero)
+// =====================================================
+.bgGrid,
+.bgDotsTl,
+.bgDotsBr,
+.bgGradient {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bgGrid {
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(244, 122, 160, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90, 150, 238, 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(
+    ellipse 70% 55% at center,
+    black 25%,
+    transparent 80%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 55% at center,
+    black 25%,
+    transparent 80%
+  );
+}
+
+.bgDotsTl,
+.bgDotsBr {
+  width: 320px;
+  height: 320px;
+  background-image: radial-gradient(
+    circle,
+    var(--pink-300) 1.4px,
+    transparent 1.6px
+  );
+  background-size: 14px 14px;
+  opacity: 0.3;
+}
+
+.bgDotsTl {
+  top: 3rem;
+  left: -50px;
+  mask-image: radial-gradient(ellipse at top left, black, transparent 70%);
+  -webkit-mask-image: radial-gradient(
+    ellipse at top left,
+    black,
+    transparent 70%
+  );
+}
+
+.bgDotsBr {
+  bottom: 2rem;
+  right: -40px;
+  background-image: radial-gradient(
+    circle,
+    var(--blue-300) 1.4px,
+    transparent 1.6px
+  );
+  mask-image: radial-gradient(ellipse at bottom right, black, transparent 70%);
+  -webkit-mask-image: radial-gradient(
+    ellipse at bottom right,
+    black,
+    transparent 70%
+  );
+}
+
+.bgGradient {
+  inset: 0;
+  background:
+    radial-gradient(
+      55% 45% at 75% 25%,
+      rgba(255, 182, 200, 0.22),
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 45% at 20% 75%,
+      rgba(159, 197, 255, 0.2),
+      transparent 75%
+    ),
+    radial-gradient(
+      40% 40% at 55% 88%,
+      rgba(200, 182, 255, 0.2),
+      transparent 80%
+    );
+
+  [data-theme="dark"] & {
+    background:
+      radial-gradient(
+        55% 45% at 75% 25%,
+        rgba(255, 159, 184, 0.14),
+        transparent 70%
+      ),
+      radial-gradient(
+        50% 45% at 20% 75%,
+        rgba(127, 179, 255, 0.16),
+        transparent 75%
+      ),
+      radial-gradient(
+        40% 40% at 55% 88%,
+        rgba(200, 182, 255, 0.14),
+        transparent 80%
+      );
+  }
+}
+
+// =====================================================
+// Vertical kanji spine (left watermark)
+// =====================================================
+.kanjiSpine {
+  position: absolute;
+  top: 14%;
+  left: 1.2%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.05em;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(3.5rem, 6vw, 6.5rem);
+  line-height: 1;
+  z-index: 1;
+  user-select: none;
+  pointer-events: none;
+  text-orientation: upright;
+
+  span {
+    background: linear-gradient(
+      180deg,
+      var(--pink-300),
+      var(--lavender-300),
+      var(--blue-300)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    opacity: 0.15;
+
+    &:nth-child(1) {
+      animation: drift-y 7s var(--ease-soft) infinite;
+    }
+    &:nth-child(2) {
+      animation: drift-y 7s var(--ease-soft) infinite 1s;
+    }
+    &:nth-child(3) {
+      animation: drift-y 7s var(--ease-soft) infinite 2s;
+    }
+  }
+
+  [data-theme="dark"] & span {
+    opacity: 0.2;
+  }
+
+  @media (max-width: 1280px) {
+    display: none;
+  }
+}
+
+// =====================================================
+// Magazine spine (right watermark)
+// =====================================================
+.issueTag {
+  position: absolute;
+  top: 50%;
+  right: 0.85rem;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  writing-mode: vertical-rl;
+  opacity: 0.5;
+  z-index: 2;
+  user-select: none;
+  pointer-events: none;
+
+  @media (max-width: 1280px) {
+    display: none;
+  }
+}
+
+// ===== Header =====
+.header {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  animation: fade-up 0.8s var(--ease-soft) both;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+// =====================================================
+// Chapter label (Hero-style)
+// =====================================================
+.chapter {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.3rem 0.95rem 0.3rem 1.1rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(244, 122, 160, 0.12);
+}
+
+.chapterBar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 70%;
+  background: linear-gradient(180deg, var(--pink-400), var(--blue-400));
+  border-radius: 2px;
+}
+
+.chapterNo {
+  color: var(--pink-500);
+  font-family: var(--font-mono);
+}
+
+.chapterSep {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.chapterLabel {
+  color: var(--text-primary);
+}
+
+.chapterKana {
+  font-family: var(--font-hand);
+  letter-spacing: 0.15em;
+  color: var(--blue-500);
+  margin-left: 0.25rem;
+  font-weight: 500;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 4.2vw, 3.2rem);
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1;
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+}
+
+.titleAccent {
+  background: linear-gradient(
+    120deg,
+    var(--pink-500),
+    var(--pink-400) 30%,
+    var(--lavender-300) 55%,
+    var(--blue-400) 80%,
+    var(--blue-500)
+  );
+  background-size: 220% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-shift 7s ease infinite;
+  filter: drop-shadow(0 6px 20px rgba(244, 122, 160, 0.22));
+  margin: 0 0.2em;
+}
+
+.titlePeriod {
+  color: var(--pink-400);
+  font-family: var(--font-display);
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+
+  strong {
+    color: var(--pink-500);
+    font-weight: 600;
+  }
+
+  kbd {
+    display: inline-block;
+    padding: 0.1rem 0.45rem;
+    margin: 0 0.15rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    color: var(--text-secondary);
+  }
+}
+
+// =====================================================
+// STAGE WRAPPER — holds floating decorations around stage
+// =====================================================
+.stageWrap {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+// Floating cute symbol decorations around the stage (Hero vibe)
+.stageDeco {
+  position: absolute;
+  font-family: var(--font-display);
+  font-weight: 700;
+  pointer-events: none;
+  user-select: none;
+  z-index: 3;
+  filter: drop-shadow(0 4px 12px rgba(244, 122, 160, 0.4));
+  animation: float 5s var(--ease-soft) infinite;
+}
+
+.stageDeco1 {
+  top: -1.5rem;
+  left: 10%;
+  font-size: 1.8rem;
+  color: var(--pink-500);
+  animation-delay: 0s;
+}
+
+.stageDeco2 {
+  top: 40%;
+  right: -1.5rem;
+  font-size: 1.5rem;
+  color: var(--blue-500);
+  animation-delay: 1s;
+}
+
+.stageDeco3 {
+  bottom: -1rem;
+  left: 35%;
+  font-size: 1.6rem;
+  color: var(--lavender-300);
+  animation-delay: 2s;
+  filter: drop-shadow(0 4px 12px rgba(200, 182, 255, 0.5));
+}
+
+.stageDeco4 {
+  top: 15%;
+  left: -1.4rem;
+  font-size: 1.7rem;
+  color: var(--pink-400);
+  animation-delay: 1.5s;
+}
+
+@media (max-width: 900px) {
+  .stageDeco1,
+  .stageDeco2,
+  .stageDeco3,
+  .stageDeco4 {
+    display: none;
+  }
+}
+
+// =====================================================
+// STAGE — main VN canvas
+// =====================================================
+.stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 520px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 2px solid var(--bg-elevated);
+  cursor: pointer;
+  user-select: none;
+  box-shadow:
+    0 30px 70px rgba(244, 122, 160, 0.25),
+    0 12px 30px rgba(90, 150, 238, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+  animation: fade-up 0.9s 0.1s var(--ease-soft) both;
+
+  &:focus-visible {
+    outline: 3px solid var(--pink-300);
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 760px) {
+    aspect-ratio: auto;
+    min-height: 640px;
+  }
+}
+
+// ===== Background image (animated GIF) =====
+.bgLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.bgImg {
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.04); // slight zoom so edges never show
+  animation: bg-drift 30s ease-in-out infinite alternate;
+}
+
+@keyframes bg-drift {
+  0% {
+    transform: scale(1.04) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.08) translate(-1%, -1%);
+  }
+}
+
+// Overlay tints bg for readability
+.bgOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 209, 220, 0.15) 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(25, 15, 40, 0.35) 100%
+  );
+}
+
+// Vignette for dramatic focus
+.bgVignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 70% at center,
+    transparent 40%,
+    rgba(0, 0, 0, 0.35) 100%
+  );
+}
+
+[data-theme="dark"] {
+  .bgOverlay {
+    background: linear-gradient(
+      180deg,
+      rgba(34, 23, 51, 0.2) 0%,
+      rgba(34, 23, 51, 0) 40%,
+      rgba(10, 5, 20, 0.55) 100%
+    );
+  }
+  .bgVignette {
+    background: radial-gradient(
+      ellipse 80% 70% at center,
+      transparent 35%,
+      rgba(0, 0, 0, 0.55) 100%
+    );
+  }
+}
+
+// =====================================================
+// Top-right controls
+// =====================================================
+.controls {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.ctrlBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  padding: 0.4rem 0.72rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: all 0.2s var(--ease-bounce);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    color: var(--pink-500);
+    border-color: var(--pink-300);
+    transform: translateY(-1px);
+  }
+
+  &[data-active] {
+    color: #fff;
+    background: linear-gradient(135deg, var(--pink-400), var(--blue-400));
+    border-color: transparent;
+  }
+}
+
+[data-theme="dark"] .ctrlBtn {
+  background: rgba(34, 23, 51, 0.75);
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.15);
+  &[data-active] {
+    color: #fff;
+  }
+}
+
+// =====================================================
+// BOTTOM BAR — portrait + content (dialogue or choices)
+// Single flex container so portrait is INLINE with dialogue
+// =====================================================
+.bottomBar {
+  position: absolute;
+  left: 3%;
+  right: 3%;
+  bottom: 3%;
+  z-index: 6;
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  animation: fade-up 0.4s var(--ease-soft) both;
+
+  @media (max-width: 760px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
+  }
+}
+
+.bottomContent {
+  flex: 1;
+  min-width: 0;
+}
+
+// ===== Portrait — side-by-side with dialogue =====
+.portraitWrap {
+  flex-shrink: 0;
+  position: relative;
+  pointer-events: none;
+  animation: portrait-breathe 4s var(--ease-soft) infinite;
+
+  @media (max-width: 760px) {
+    align-self: center;
+  }
+}
+
+.portrait {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  transition: transform 0.4s var(--ease-bounce);
+
+  @media (max-width: 960px) {
+    width: 160px;
+    height: 160px;
+  }
+
+  @media (max-width: 760px) {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+// Emote-driven subtle pose changes + glow color
+.emote-smile {
+  transform: rotate(-2deg) scale(1.02);
+  --glow: rgba(244, 122, 160, 0.6); // pink
+}
+.emote-think {
+  transform: rotate(1deg) scale(0.98);
+  --glow: rgba(200, 182, 255, 0.6); // lavender
+}
+.emote-excited {
+  transform: rotate(-3deg) scale(1.05);
+  animation: bounce-soft 0.5s var(--ease-bounce);
+  --glow: rgba(255, 215, 120, 0.65); // gold
+}
+.emote-wink {
+  transform: rotate(-1deg) scale(1.01);
+  --glow: rgba(127, 179, 255, 0.6); // blue
+}
+.emote-shy {
+  transform: rotate(2deg) scale(0.97);
+  --glow: rgba(255, 200, 220, 0.65); // soft pink
+}
+.emote-neutral {
+  transform: rotate(0) scale(1);
+  --glow: rgba(255, 159, 184, 0.5); // default pink
+}
+
+@keyframes bounce-soft {
+  0%,
+  100% {
+    transform: rotate(-3deg) scale(1.05);
+  }
+  50% {
+    transform: rotate(-3deg) scale(1.1);
+  }
+}
+
+@keyframes portrait-breathe {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.portraitImg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 28px;
+  overflow: hidden;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 20px 50px rgba(244, 122, 160, 0.4),
+    0 8px 20px rgba(90, 150, 238, 0.25);
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.portraitGlow {
+  position: absolute;
+  inset: -20px;
+  border-radius: 36px;
+  background: radial-gradient(
+    circle at center,
+    var(--glow, rgba(255, 159, 184, 0.55)),
+    transparent 70%
+  );
+  z-index: -1;
+  filter: blur(20px);
+  animation: glow-pulse 3s var(--ease-soft) infinite;
+  transition: background 0.5s var(--ease-soft);
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+.emoteBubble {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--pink-400), var(--blue-400));
+  color: #fff;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  box-shadow: 0 6px 14px rgba(244, 122, 160, 0.5);
+  animation: float 2.5s var(--ease-soft) infinite;
+  border: 3px solid rgba(255, 255, 255, 0.95);
+}
+
+// =====================================================
+// DIALOGUE BOX (inside .bottomContent)
+// =====================================================
+.dialogue {
+  animation: fade-up 0.3s var(--ease-soft) both;
+}
+
+.namePlate {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem 0.4rem 0.9rem;
+  background: linear-gradient(135deg, var(--pink-400), var(--blue-400));
+  color: #fff;
+  border-radius: 14px 14px 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 -2px 12px rgba(244, 122, 160, 0.35);
+  position: relative;
+  z-index: 2;
+  margin-left: 1rem;
+}
+
+.nameSparkle {
+  font-size: 0.9rem;
+  animation: spin-slow 6s linear infinite;
+}
+
+.nameMain {
+  letter-spacing: 0.02em;
+}
+
+.nameKana {
+  font-family: var(--font-hand);
+  font-size: 0.78rem;
+  opacity: 0.88;
+}
+
+.nameDivider {
+  width: 1px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.5);
+  margin: 0 0.1rem;
+}
+
+.nameTitle {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.dialogueBox {
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem 1.75rem;
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  box-shadow:
+    0 16px 40px rgba(244, 122, 160, 0.22),
+    0 4px 12px rgba(90, 150, 238, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  min-height: 120px;
+
+  // subtle paper dot texture
+  background-image:
+    radial-gradient(rgba(244, 122, 160, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95));
+  background-size:
+    16px 16px,
+    100%;
+}
+
+[data-theme="dark"] .dialogueBox {
+  background: rgba(34, 23, 51, 0.92);
+  border-color: rgba(255, 255, 255, 0.1);
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(rgba(34, 23, 51, 0.92), rgba(34, 23, 51, 0.92));
+  background-size:
+    16px 16px,
+    100%;
+}
+
+.dialogueText {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--text-primary);
+  margin: 0;
+  min-height: 2.6em;
+
+  @media (max-width: 760px) {
+    font-size: 0.95rem;
+  }
+}
+
+.emphasis {
+  font-style: italic;
+  background: linear-gradient(120deg, var(--pink-500), var(--blue-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 600;
+}
+
+.cursor {
+  display: inline-block;
+  width: 9px;
+  height: 1.05em;
+  margin-left: 3px;
+  vertical-align: text-bottom;
+  background: linear-gradient(180deg, var(--pink-400), var(--blue-400));
+  border-radius: 1.5px;
+  animation: blink 0.9s steps(2) infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+// ===== Progress dots =====
+.progressDots {
+  position: absolute;
+  bottom: 0.6rem;
+  left: 1.5rem;
+  display: flex;
+  gap: 0.32rem;
+}
+
+.progressDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border-default);
+  transition: all 0.3s;
+}
+
+.progressDotActive {
+  background: linear-gradient(135deg, var(--pink-400), var(--blue-400));
+  transform: scale(1.2);
+}
+
+// ===== Next chevron =====
+.nextChevron {
+  position: absolute;
+  right: 1.2rem;
+  bottom: 0.55rem;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink-400), var(--blue-400));
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(244, 122, 160, 0.45);
+  animation: chevron-bob 1.2s var(--ease-soft) infinite;
+}
+
+@keyframes chevron-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+// =====================================================
+// CHOICES ABOVE dialogue (compact grid, inline with bottomContent)
+// =====================================================
+.choicesAbove {
+  display: flex;
+  flex-direction: column;
+  cursor: default;
+  margin-bottom: 0.5rem;
+  animation: fade-up 0.35s var(--ease-soft) both;
+}
+
+.choicesHeader {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 0.45rem;
+  padding: 0 0.15rem;
+}
+
+.choicesCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 0.25rem 0.65rem;
+  background: rgba(244, 122, 160, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.choiceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+
+  @media (max-width: 760px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.choice {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.85rem;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  transition: all 0.25s var(--ease-bounce);
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 159, 184, 0.25),
+      rgba(127, 179, 255, 0.25)
+    );
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  &:hover {
+    transform: translateY(-2px) scale(1.015);
+    border-color: var(--pink-300);
+    box-shadow: 0 12px 24px rgba(244, 122, 160, 0.3);
+
+    &::before {
+      opacity: 1;
+    }
+
+    .choiceIcon {
+      transform: scale(1.15) rotate(-6deg);
+      color: var(--pink-500);
+    }
+  }
+
+  &[data-visited] {
+    background: rgba(240, 230, 255, 0.88);
+    border-color: var(--lavender-300);
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+[data-theme="dark"] .choice {
+  background: rgba(34, 23, 51, 0.85);
+  border-color: rgba(255, 255, 255, 0.15);
+  &[data-visited] {
+    background: rgba(48, 32, 70, 0.9);
+  }
+}
+
+// Lucide icon wrapper — circular gradient badge
+.choiceIcon {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink-300), var(--blue-300));
+  color: #fff;
+  box-shadow: 0 3px 8px rgba(244, 122, 160, 0.3);
+  transition:
+    transform 0.3s var(--ease-bounce),
+    color 0.2s;
+  position: relative;
+  z-index: 1;
+}
+
+.choiceBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.choiceLabel {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.choiceHint {
+  font-size: 0.66rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.choiceCheck {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.4rem;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink-400), var(--lavender-300));
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(244, 122, 160, 0.35);
+}
+
+.allDoneHint {
+  margin-top: 0.5rem;
+  font-size: 0.72rem;
+  color: #fff;
+  text-align: center;
+  font-style: italic;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+// =====================================================
+// STORY COMPLETE — cute card overlay
+// =====================================================
+.completeOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(20, 10, 30, 0.55);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  cursor: default;
+  animation: fade-up 0.45s var(--ease-soft) both;
+}
+
+.completeCard {
+  position: relative;
+  max-width: 440px;
+  width: 100%;
+  padding: 2.2rem 2rem 1.8rem;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(255, 240, 248, 0.96) 60%,
+    rgba(235, 240, 255, 0.96)
+  );
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 28px;
+  text-align: center;
+  box-shadow:
+    0 24px 60px rgba(244, 122, 160, 0.4),
+    0 8px 24px rgba(90, 150, 238, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  animation: card-pop 0.7s var(--ease-bounce) both;
+
+  // corner sparkle decorations
+  &::before,
+  &::after {
+    content: "✦";
+    position: absolute;
+    font-size: 1.2rem;
+    color: var(--pink-400);
+    filter: drop-shadow(0 2px 6px rgba(244, 122, 160, 0.5));
+    animation: sparkle-twinkle 2.4s var(--ease-soft) infinite;
+  }
+  &::before {
+    top: 0.7rem;
+    left: 1rem;
+  }
+  &::after {
+    top: 0.9rem;
+    right: 1.2rem;
+    color: var(--blue-400);
+    animation-delay: 1.2s;
+  }
+}
+
+[data-theme="dark"] .completeCard {
+  background: linear-gradient(
+    160deg,
+    rgba(48, 32, 70, 0.98),
+    rgba(60, 38, 85, 0.95) 60%,
+    rgba(40, 30, 65, 0.96)
+  );
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+@keyframes card-pop {
+  0% {
+    transform: scale(0.7) translateY(30px);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.05) translateY(-4px);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes sparkle-twinkle {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.3) rotate(180deg);
+    opacity: 1;
+  }
+}
+
+.completeIcons {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1.2rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(
+    135deg,
+    var(--pink-300),
+    var(--lavender-300),
+    var(--blue-300)
+  );
+  border-radius: var(--radius-full);
+  color: #fff;
+  box-shadow:
+    0 10px 24px rgba(244, 122, 160, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.completeIconStar,
+.completeIconHeart,
+.completeIconParty {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+.completeIconHeart {
+  animation: heart-beat 1.2s var(--ease-bounce) infinite;
+  fill: currentColor;
+}
+
+.completeIconStar {
+  animation: icon-spin 4s linear infinite;
+}
+
+.completeIconParty {
+  animation: bounce-soft 1s var(--ease-bounce) infinite;
+}
+
+@keyframes heart-beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(1);
+  }
+  75% {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes icon-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.completeTitle {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.75rem;
+  letter-spacing: -0.01em;
+  background: linear-gradient(
+    120deg,
+    var(--pink-500),
+    var(--lavender-300),
+    var(--blue-500)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 0.35rem;
+}
+
+.completeSub {
+  font-family: var(--font-hand);
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.1rem;
+}
+
+.completeStats {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  margin-bottom: 1.2rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+}
+
+.completeStat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+
+  svg {
+    color: var(--pink-500);
+  }
+}
+
+.completeDot {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.replayBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--pink-400), var(--blue-400));
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.25s var(--ease-bounce);
+  box-shadow:
+    0 10px 22px rgba(244, 122, 160, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+
+  svg {
+    transition: transform 0.3s var(--ease-bounce);
+  }
+
+  &:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 14px 28px rgba(244, 122, 160, 0.5);
+
+    svg {
+      transform: rotate(-180deg);
+    }
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+// =====================================================
+// Tap hint (first visit)
+// =====================================================
+.tapHint {
+  position: absolute;
+  bottom: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 7;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  color: #fff;
+  background: rgba(244, 122, 160, 0.9);
+  padding: 0.5rem 1.2rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  animation: hint-pulse 2s var(--ease-soft) infinite;
+  pointer-events: none;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  @media (max-width: 760px) {
+    bottom: 20rem;
+  }
+}
+
+@keyframes hint-pulse {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px);
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// =====================================================
+// SAKURA PETALS INSIDE STAGE
+// =====================================================
+.petalLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 3;
+}
+
+.petal {
+  position: absolute;
+  top: -24px;
+  color: rgba(255, 194, 214, 0.85);
+  animation: petal-fall linear infinite;
+  filter: drop-shadow(0 2px 4px rgba(244, 122, 160, 0.35));
+  will-change: transform, opacity;
+}
+
+@keyframes petal-fall {
+  0% {
+    transform: translate(0, -20px) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(var(--sway, 30px), 50vh) rotate(180deg);
+  }
+  100% {
+    transform: translate(calc(var(--sway, 30px) * -0.6), 100vh) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+// =====================================================
+// MANGA PANEL CORNERS
+// =====================================================
+.mangaCorner {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-color: rgba(255, 255, 255, 0.85);
+  border-style: solid;
+  border-width: 0;
+  pointer-events: none;
+  z-index: 9;
+  filter: drop-shadow(0 2px 6px rgba(244, 122, 160, 0.5));
+  transition: border-color 0.4s;
+}
+
+.cornerTl {
+  top: 12px;
+  left: 12px;
+  border-top-width: 2.5px;
+  border-left-width: 2.5px;
+  border-top-left-radius: 6px;
+}
+
+.cornerTr {
+  top: 12px;
+  right: 12px;
+  border-top-width: 2.5px;
+  border-right-width: 2.5px;
+  border-top-right-radius: 6px;
+}
+
+.cornerBl {
+  bottom: 12px;
+  left: 12px;
+  border-bottom-width: 2.5px;
+  border-left-width: 2.5px;
+  border-bottom-left-radius: 6px;
+}
+
+.cornerBr {
+  bottom: 12px;
+  right: 12px;
+  border-bottom-width: 2.5px;
+  border-right-width: 2.5px;
+  border-bottom-right-radius: 6px;
+}
+
+[data-theme="dark"] .mangaCorner {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+// =====================================================
+// CONFETTI (Story Complete)
+// =====================================================
+.confettiLayer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 7; // above overlay bg, below card (card is z-index auto stacking above)
+}
+
+.confettiPiece {
+  position: absolute;
+  top: -30px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  animation: confetti-fall linear forwards;
+  will-change: transform, opacity;
+}
+
+.confettiColor0 {
+  color: var(--pink-400);
+  filter: drop-shadow(0 2px 6px rgba(244, 122, 160, 0.5));
+}
+.confettiColor1 {
+  color: var(--blue-400);
+  filter: drop-shadow(0 2px 6px rgba(127, 179, 255, 0.5));
+}
+.confettiColor2 {
+  color: var(--lavender-300);
+  filter: drop-shadow(0 2px 6px rgba(200, 182, 255, 0.5));
+}
+.confettiColor3 {
+  color: var(--pink-500);
+  filter: drop-shadow(0 2px 6px rgba(232, 90, 138, 0.5));
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translate3d(0, -40px, 0) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--drift, 40px), 110vh, 0)
+      rotate(var(--spin, 360deg));
+    opacity: 0;
+  }
+}
+
+// =====================================================
+// DIALOGUE BOX PREVIEW STATE (when hovering a choice)
+// =====================================================
+.dialogueBoxPreview {
+  border-color: var(--pink-300) !important;
+  box-shadow:
+    0 16px 36px rgba(244, 122, 160, 0.3),
+    0 0 0 2px rgba(244, 122, 160, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7) !important;
+
+  .dialogueText {
+    font-style: italic;
+    color: var(--text-secondary);
+    opacity: 0.92;
+    animation: preview-fade 0.2s ease-out;
+  }
+}
+
+@keyframes preview-fade {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 0.92;
+    transform: translateY(0);
+  }
+}
+
+// Reduced motion overrides
+@media (prefers-reduced-motion: reduce) {
+  .stage,
+  .portraitWrap,
+  .portraitGlow,
+  .nameSparkle,
+  .nextChevron,
+  .emoteBubble,
+  .tapHint,
+  .completeCard,
+  .bgImg,
+  .petal,
+  .confettiPiece {
+    animation: none !important;
+  }
+}

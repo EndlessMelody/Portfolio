@@ -1,0 +1,28 @@
+.field {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.petal {
+  position: absolute;
+  top: -10vh;
+  display: block;
+  will-change: transform, opacity;
+  animation-name: sakura-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  filter: drop-shadow(0 2px 4px rgba(216, 95, 135, 0.18));
+}
+
+.v0 { color: var(--pink-300); }
+.v1 { color: var(--pink-200); }
+.v2 { color: var(--lavender-200); }
+
+[data-theme="dark"] {
+  .v0 { color: rgba(255, 182, 200, 0.7); }
+  .v1 { color: rgba(200, 182, 255, 0.7); }
+  .v2 { color: rgba(159, 197, 255, 0.65); }
+}

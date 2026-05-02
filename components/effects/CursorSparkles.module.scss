@@ -1,0 +1,17 @@
+.field {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.sparkle {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  animation: sparkle-pop 0.75s var(--ease-soft) forwards;
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+.pink { color: var(--pink-400); }
+.blue { color: var(--blue-400); }
+.lavender { color: var(--lavender-300); }
