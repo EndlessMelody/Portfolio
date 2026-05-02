@@ -16,6 +16,7 @@ export default function HomePage() {
       <Skills />
       <SectionDivider variant="wave" flip />
       <Projects />
+      <SectionDivider variant="wave" />
       <Experience />
       <SectionDivider variant="wave" flip />
       <Contact />
