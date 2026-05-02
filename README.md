@@ -1,20 +1,34 @@
-# 🌸 Anime Pastel Portfolio
+<div align="center">
+  <img src="public/logo.jpg" alt="Endless Melody Logo" width="150" />
+  
+  # Endless Melody's Grimoire
+  
+  **AI-Powered & Magical Anime Portfolio**
+  
+  *Bridging the gap between ancient arcane aesthetics and modern web development*
+  
+  <p>
+    <img src="https://img.shields.io/badge/Built_with-Next.js_14-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+    <img src="https://img.shields.io/badge/Language-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/Styling-SCSS-CC6699?style=for-the-badge&logo=sass&logoColor=white" alt="SCSS" />
+    <img src="https://img.shields.io/badge/License-MIT-success?style=for-the-badge" alt="MIT License" />
+    <img src="https://img.shields.io/badge/Deployed_on-Vercel-black?style=for-the-badge&logo=vercel" alt="Vercel" />
+  </p>
 
-A timeless personal portfolio with an anime aesthetic — pastel pink, blue and lavender — built on **Next.js 14**, **TypeScript**, and **SCSS modules**, with **Once UI** available as a design-system extension.
-
-> Crafted with floating sakura petals, RPG-style skill bars, cursor sparkles, and a "starry night" dark mode.
+  <p>
+    <a href="https://github.com/EndlessMelody/Portfolio">Live Demo</a> • 
+    <a href="#about">Documentation</a> • 
+    <a href="https://github.com/EndlessMelody/Portfolio/issues">Report Issues</a>
+  </p>
+</div>
 
 ---
 
-## ✨ Features
+## About
 
-- **6 sections** — Hero, About, Skills, Projects, Experience, Contact
-- **Pastel theme** — pink × blue × lavender, fully tokenised in `app/theme.scss`
-- **Light + dark** — soft daydream / starry night, persisted to `localStorage`
-- **Anime touches** — sakura petals, RPG-style skill levels, cursor sparkles, floating decorations
-- **Responsive** — works from mobile to ultrawide
-- **Accessible** — `prefers-reduced-motion`, focus rings, aria labels, semantic landmarks
-- **Smooth scroll-spy nav**, glassmorphic header, animated avatar blob
+A timeless personal portfolio with an edgy, high-fantasy anime aesthetic — featuring Grimoire 3D project books, mysterious HUDs, and ambient audio — built on **Next.js 14**, **TypeScript**, and **SCSS modules**.
+
+> Crafted with floating sakura petals, RPG-style skill bars, cursor sparkles, and a deep "arcane night" dark mode.
 
 ## 🧰 Tech stack
 
