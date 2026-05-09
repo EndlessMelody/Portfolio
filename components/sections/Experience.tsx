@@ -1,3 +1,4 @@
+import type React from "react";
 import { experiences } from "@/lib/data";
 import styles from "./Experience.module.scss";
 import { AnimeOrnaments } from "./AnimeOrnaments";
@@ -13,14 +14,14 @@ export function Experience() {
       <div className={styles.bgDotsBr} aria-hidden />
       <div className={styles.bgGradient} aria-hidden />
       <AnimeOrnaments />
-      <div className={styles.kanjiSpine} aria-hidden>
+      <div className={styles.kanjiSpine} aria-hidden data-parallax="0.18">
         <span>冒</span>
         <span>険</span>
         <span>記</span>
       </div>
 
       {/* Issue tag (right) */}
-      <div className={styles.issueTag} aria-hidden>
+      <div className={styles.issueTag} aria-hidden data-parallax="0.1">
         ISSUE 05 · 冒険記 · 2026
       </div>
 
@@ -45,7 +46,7 @@ export function Experience() {
       <div className={styles.bgNebula} aria-hidden />
 
       <div className="container">
-        <header className={styles.header}>
+        <header className={`${styles.header} reveal`}>
           <div className={styles.chapter}>
             <span className={styles.chapterBar} aria-hidden />
             <span className={styles.chapterNo}>CH.05</span>
@@ -56,8 +57,7 @@ export function Experience() {
           </div>
 
           <h2 className={styles.title}>
-            The{" "}
-            <span className={styles.titleAccent}>Star Map</span>
+            The <span className="gradient-text">Star Map</span>
           </h2>
           <p className={styles.subtitle}>
             Constellations of my career — tracing the path from left to right.
@@ -65,7 +65,10 @@ export function Experience() {
         </header>
 
         {/* Constellation Map */}
-        <div className={styles.constellation}>
+        <div
+          className={`${styles.constellation} reveal`}
+          style={{ "--d": "0.15s" } as React.CSSProperties}
+        >
           {chronologicalExp.map((exp, i) => {
             const isCurrent = exp.period.includes("Present");
             const isTop = i % 2 === 0;
@@ -113,9 +116,30 @@ export function Experience() {
                 <stop offset="100%" stopColor="rgba(244, 122, 160, 0.15)" />
               </linearGradient>
             </defs>
-            <line x1="12.5%" y1="50%" x2="37.5%" y2="50%" stroke="url(#conGrad)" strokeWidth="2" />
-            <line x1="37.5%" y1="50%" x2="62.5%" y2="50%" stroke="url(#conGrad)" strokeWidth="2" />
-            <line x1="62.5%" y1="50%" x2="87.5%" y2="50%" stroke="url(#conGrad)" strokeWidth="2" />
+            <line
+              x1="12.5%"
+              y1="50%"
+              x2="37.5%"
+              y2="50%"
+              stroke="url(#conGrad)"
+              strokeWidth="2"
+            />
+            <line
+              x1="37.5%"
+              y1="50%"
+              x2="62.5%"
+              y2="50%"
+              stroke="url(#conGrad)"
+              strokeWidth="2"
+            />
+            <line
+              x1="62.5%"
+              y1="50%"
+              x2="87.5%"
+              y2="50%"
+              stroke="url(#conGrad)"
+              strokeWidth="2"
+            />
           </svg>
         </div>
       </div>

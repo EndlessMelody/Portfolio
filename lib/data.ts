@@ -10,8 +10,9 @@ export const personal = {
   fullName: "Đăng Khoa",
   alias: "melody.dev",
   title: "AI / ML Engineer · SE Student",
-  tagline: "Teaching machines to dream in pastel ✦",
+  tagline: "Memento mori ✦ remember that you must die",
   location: "Vietnam",
+  coords: { lat: 10.823, lon: 106.629, timezone: "Asia/Ho_Chi_Minh" }, // Ho Chi Minh City — used by weather widget
   availability: "Open to ML / SWE internships",
   characterClass: "AI Mage · SE Apprentice",
   currentQuest: "training latent dreams",
@@ -28,6 +29,14 @@ export const personal = {
     artist: "from the Unbound",
     src: "/Homecoming%20Star%20from%20the%20Unbound.mp3",
     volume: 0.8, // 80%
+    cover: "", // optional — path to cover image, e.g. "/cover.jpg". Empty = gradient disc
+    kanji: "音", // center kanji for the disc when no cover image
+    lyrics: [
+      "stars are calling me home tonight ✦",
+      "through the silver sea of dreams",
+      "every shadow hums the same old song",
+      "until the dawn returns to me",
+    ],
   },
   currentlyBuilding: {
     name: "夢 Diffusion · sketch → anime",
@@ -37,17 +46,18 @@ export const personal = {
   techBelt: [
     "Python",
     "PyTorch",
-    "TensorFlow",
+    "CUDA",
+    "Diffusers",
     "Transformers",
-    "scikit-learn",
-    "NumPy",
-    "Pandas",
+    "LangChain",
+    "Vector DB",
     "FastAPI",
-    "Docker",
-    "Git",
     "TypeScript",
     "Next.js",
+    "React",
     "Node.js",
+    "Docker",
+    "MLOps",
   ],
   socials: {
     github: "https://github.com/EndlessMelody/",
@@ -254,7 +264,14 @@ export const projects: Project[] = [
     title: "Careermate",
     description:
       "An end-to-end intelligent career assistant designed to streamline the job hunting process. Features include automated application tracking, AI-driven resume tailoring, interview preparation agents, and comprehensive market analytics to empower professionals.",
-    tech: ["React", "TypeScript", "Node.js", "MongoDB", "OpenAI API", "TailwindCSS"],
+    tech: [
+      "React",
+      "TypeScript",
+      "Node.js",
+      "MongoDB",
+      "OpenAI API",
+      "TailwindCSS",
+    ],
     repoUrl: "https://github.com/EndlessMelody/Careermate",
     image: "/CareerMate.png",
     accent: "blue",
@@ -263,7 +280,14 @@ export const projects: Project[] = [
     title: "AiRI",
     description:
       "A sophisticated conversational AI agent engineered for the moeru-ai ecosystem. Built with deep anime knowledge bases, persistent personalized memory, and emotionally intelligent dialogue generation utilizing RAG and fine-tuned LLMs.",
-    tech: ["Python", "PyTorch", "FastAPI", "Transformers", "LangChain", "Vector DB"],
+    tech: [
+      "Python",
+      "PyTorch",
+      "FastAPI",
+      "Transformers",
+      "LangChain",
+      "Vector DB",
+    ],
     repoUrl: "https://github.com/moeru-ai/airi",
     image: "/AiRI.png",
     accent: "pink",
@@ -272,7 +296,14 @@ export const projects: Project[] = [
     title: "TasteMap",
     description:
       "A high-fidelity social networking platform tailored for food enthusiasts. Implements the 'Elite Pastel Blue' design system with a real-time messenger, interactive friend discovery, and cinematic UI transitions for a premium experience.",
-    tech: ["Next.js", "TypeScript", "Framer Motion", "WebSockets", "Zustand", "Once UI"],
+    tech: [
+      "Next.js",
+      "TypeScript",
+      "Framer Motion",
+      "WebSockets",
+      "Zustand",
+      "Once UI",
+    ],
     repoUrl: "https://github.com/EndlessMelody/TasteMap",
     image: "/TasteMap.png",
     accent: "lavender",

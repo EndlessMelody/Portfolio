@@ -1,0 +1,149 @@
+// =====================================================
+// Seasonal Overlay — chip indicator + particle layer
+// =====================================================
+
+.chip {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 45;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem 0.3rem 0.75rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  pointer-events: none;
+  user-select: none;
+  animation: chip-in 0.8s var(--ease-bounce) 0.6s both;
+
+  @media (max-width: 900px) {
+    top: 0.7rem;
+    left: 0.7rem;
+    padding: 0.22rem 0.5rem;
+    font-size: 0.55rem;
+  }
+
+  &[data-season="spring"] {
+    border-left: 3px solid #f8a1c7;
+    .kanji {
+      color: #f8a1c7;
+    }
+  }
+  &[data-season="summer"] {
+    border-left: 3px solid #ffc38a;
+    .kanji {
+      color: #ffc38a;
+    }
+  }
+  &[data-season="autumn"] {
+    border-left: 3px solid #e78a5a;
+    .kanji {
+      color: #e78a5a;
+    }
+  }
+  &[data-season="winter"] {
+    border-left: 3px solid #a4c6ff;
+    .kanji {
+      color: #a4c6ff;
+    }
+  }
+}
+
+.kanji {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.label {
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+}
+
+// ===== Particles =====
+.particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  top: -20px;
+  border-radius: 50%;
+  opacity: 0;
+  animation: season-fall linear infinite;
+  will-change: transform, opacity;
+}
+
+// Summer — warm fireflies
+.particles[data-season="summer"] .particle {
+  background: radial-gradient(
+    circle,
+    rgba(255, 215, 130, 0.9),
+    rgba(255, 160, 90, 0) 70%
+  );
+  filter: drop-shadow(0 0 8px rgba(255, 195, 138, 0.8));
+}
+
+// Autumn — amber leaves (via shape)
+.particles[data-season="autumn"] .particle {
+  background: linear-gradient(135deg, #e78a5a, #b9562e);
+  border-radius: 0 70% 0 70%;
+  box-shadow: 0 2px 4px rgba(140, 60, 20, 0.35);
+}
+
+// Winter — tiny snowflakes
+.particles[data-season="winter"] .particle {
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.95),
+    rgba(164, 198, 255, 0) 75%
+  );
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.7));
+}
+
+@keyframes season-fall {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  90% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(var(--drift, 80px), 110vh, 0) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+@keyframes chip-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle {
+    animation: none;
+  }
+}

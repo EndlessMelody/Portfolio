@@ -1,7 +1,6 @@
 .experience {
   position: relative;
   padding: 6rem 0 4.5rem;
-  overflow: hidden;
   isolation: isolate;
 }
 
@@ -222,18 +221,62 @@
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(2px 2px at 20px 30px, rgba(191, 219, 254, 0.5), transparent),
-    radial-gradient(2px 2px at 40px 70px, rgba(244, 122, 160, 0.4), transparent),
-    radial-gradient(2px 2px at 50px 160px, rgba(191, 219, 254, 0.3), transparent),
-    radial-gradient(2px 2px at 90px 40px, rgba(244, 122, 160, 0.3), transparent),
-    radial-gradient(2px 2px at 130px 80px, rgba(191, 219, 254, 0.5), transparent),
-    radial-gradient(1px 1px at 170px 120px, rgba(255, 255, 255, 0.3), transparent),
-    radial-gradient(1px 1px at 60px 200px, rgba(255, 255, 255, 0.25), transparent);
+    radial-gradient(
+      2px 2px at 20px 30px,
+      rgba(191, 219, 254, 0.5),
+      transparent
+    ),
+    radial-gradient(
+      2px 2px at 40px 70px,
+      rgba(244, 122, 160, 0.4),
+      transparent
+    ),
+    radial-gradient(
+      2px 2px at 50px 160px,
+      rgba(191, 219, 254, 0.3),
+      transparent
+    ),
+    radial-gradient(
+      2px 2px at 90px 40px,
+      rgba(244, 122, 160, 0.3),
+      transparent
+    ),
+    radial-gradient(
+      2px 2px at 130px 80px,
+      rgba(191, 219, 254, 0.5),
+      transparent
+    ),
+    radial-gradient(
+      1px 1px at 170px 120px,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    ),
+    radial-gradient(
+      1px 1px at 60px 200px,
+      rgba(255, 255, 255, 0.25),
+      transparent
+    );
   background-repeat: repeat;
   background-size: 200px 250px;
   opacity: 0.6;
   z-index: 0;
   pointer-events: none;
+  // Fade starfield into transparency at section edges so it blends with
+  // adjacent sections instead of creating a visible horizontal line.
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    black 16%,
+    black 84%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    black 16%,
+    black 84%,
+    transparent 100%
+  );
 }
 
 .bgNebula {
@@ -244,10 +287,32 @@
   width: 100%;
   height: 100%;
   background:
-    radial-gradient(circle at 25% 40%, rgba(244, 122, 160, 0.06) 0%, transparent 50%),
-    radial-gradient(circle at 75% 60%, rgba(191, 219, 254, 0.06) 0%, transparent 50%);
+    radial-gradient(
+      circle at 25% 40%,
+      rgba(244, 122, 160, 0.06) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 75% 60%,
+      rgba(191, 219, 254, 0.06) 0%,
+      transparent 50%
+    );
   z-index: 0;
   pointer-events: none;
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    black 18%,
+    black 82%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    black 18%,
+    black 82%,
+    transparent 100%
+  );
 }
 
 // =====================================================
@@ -323,31 +388,21 @@
   line-height: 1;
 }
 
-.titleAccent {
-  background: linear-gradient(
-    120deg,
-    var(--pink-500),
-    var(--pink-400) 30%,
-    var(--lavender-300) 55%,
-    var(--blue-400) 80%,
-    var(--blue-500)
-  );
-  background-size: 220% 220%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: gradient-shift 7s ease infinite;
-}
-
 .subtitle {
   font-size: 0.9rem;
   color: var(--text-muted);
 }
 
 @keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 // =====================================================
@@ -420,14 +475,25 @@
   position: absolute;
   inset: -8px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(191, 219, 254, 0.6) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(191, 219, 254, 0.6) 0%,
+    transparent 70%
+  );
   opacity: 0.3;
   transition: all 0.4s ease;
 }
 
 @keyframes twinkle {
-  0%, 100% { opacity: 0.7; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.15) rotate(10deg); }
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15) rotate(10deg);
+  }
 }
 
 // =====================================================
@@ -517,7 +583,8 @@
 }
 
 @keyframes ping {
-  75%, 100% {
+  75%,
+  100% {
     transform: scale(2.5);
     opacity: 0;
   }
@@ -578,7 +645,8 @@
     min-height: auto;
     gap: 2rem;
   }
-  .nodeTop, .nodeBottom {
+  .nodeTop,
+  .nodeBottom {
     align-self: auto;
     flex-direction: column;
   }

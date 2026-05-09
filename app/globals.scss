@@ -1,7 +1,9 @@
 @use "./theme.scss";
 @use "./animations.scss";
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -14,14 +16,17 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-html, body {
+html,
+body {
   min-height: 100%;
   background: var(--bg-base);
   color: var(--text-primary);
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.6;
-  transition: background-color 0.4s var(--ease-soft), color 0.4s var(--ease-soft);
+  transition:
+    background-color 0.4s var(--ease-soft),
+    color 0.4s var(--ease-soft);
   overflow-x: hidden;
 }
 
@@ -30,9 +35,21 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse 60% 50% at 20% 10%, rgba(255, 209, 220, 0.45), transparent 60%),
-    radial-gradient(ellipse 50% 50% at 80% 20%, rgba(191, 219, 254, 0.5), transparent 60%),
-    radial-gradient(ellipse 40% 40% at 50% 90%, rgba(224, 212, 255, 0.35), transparent 60%);
+    radial-gradient(
+      ellipse 60% 50% at 20% 10%,
+      rgba(255, 209, 220, 0.45),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 50% 50% at 80% 20%,
+      rgba(191, 219, 254, 0.5),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 40% 40% at 50% 90%,
+      rgba(224, 212, 255, 0.35),
+      transparent 60%
+    );
   pointer-events: none;
   z-index: 0;
   transition: opacity 0.4s var(--ease-soft);
@@ -40,9 +57,21 @@ body::before {
 
 [data-theme="dark"] body::before {
   background:
-    radial-gradient(ellipse 60% 50% at 20% 10%, rgba(159, 130, 255, 0.18), transparent 60%),
-    radial-gradient(ellipse 50% 50% at 80% 20%, rgba(127, 179, 255, 0.15), transparent 60%),
-    radial-gradient(ellipse 40% 40% at 50% 90%, rgba(255, 159, 184, 0.12), transparent 60%);
+    radial-gradient(
+      ellipse 60% 50% at 20% 10%,
+      rgba(159, 130, 255, 0.18),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 50% 50% at 80% 20%,
+      rgba(127, 179, 255, 0.15),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 40% 40% at 50% 90%,
+      rgba(255, 159, 184, 0.12),
+      transparent 60%
+    );
 }
 
 a {
@@ -57,7 +86,8 @@ button {
   background: none;
 }
 
-img, svg {
+img,
+svg {
   display: block;
   max-width: 100%;
 }
@@ -73,8 +103,13 @@ img, svg {
 }
 
 // Custom scrollbar
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: var(--bg-muted); }
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-muted);
+}
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, var(--pink-300), var(--blue-300));
   border-radius: var(--radius-full);
@@ -85,7 +120,10 @@ img, svg {
 }
 
 // Typography helpers
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -93,11 +131,19 @@ h1, h2, h3, h4 {
   color: var(--text-primary);
 }
 
-h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); }
-h2 { font-size: clamp(2rem, 4vw, 3rem); }
-h3 { font-size: clamp(1.4rem, 2.5vw, 1.75rem); }
+h1 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+}
+h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+h3 {
+  font-size: clamp(1.4rem, 2.5vw, 1.75rem);
+}
 
-p { color: var(--text-secondary); }
+p {
+  color: var(--text-secondary);
+}
 
 // Layout utilities
 .container {
@@ -115,32 +161,395 @@ main {
 }
 
 section {
-  padding: 6rem 0;
+  padding: 5.5rem 0 5rem;
   position: relative;
   scroll-margin-top: 80px;
+  // NOTE: intentionally NO overflow:hidden here — per-section decorations
+  // live inside their own wrappers, and we need the section boundary to
+  // be permeable so ambient backdrops can blend across it.
+
+  // Fade the section's own interior backdrops into transparency at top/bottom.
+  // Any direct child whose class name starts with "bg" (bgGrid, bgGradient,
+  // bgStars, bgNebula, bgDotsTl, bgDotsBr, ...) gets a vertical mask so its
+  // visuals dissolve into adjacent sections instead of clipping at a hard edge.
+  & > [class*="bgGrid"],
+  & > [class*="bgGradient"],
+  & > [class*="bgStars"],
+  & > [class*="bgNebula"],
+  & > [class*="bgDots"],
+  & > [class*="bgOverlay"],
+  & > [class*="bgLayer"] {
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      black 14%,
+      black 86%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      black 14%,
+      black 86%,
+      transparent 100%
+    );
+  }
+
+  // Ambient bleed — top edge fades into previous section
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 140px;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.55;
+  }
+
+  &::before {
+    top: -70px;
+    background:
+      radial-gradient(
+        ellipse 70% 100% at 30% 100%,
+        rgba(255, 209, 220, 0.22),
+        transparent 70%
+      ),
+      radial-gradient(
+        ellipse 60% 100% at 75% 100%,
+        rgba(191, 219, 254, 0.2),
+        transparent 70%
+      );
+    filter: blur(24px);
+  }
+
+  &::after {
+    bottom: -70px;
+    background:
+      radial-gradient(
+        ellipse 70% 100% at 70% 0%,
+        rgba(224, 212, 255, 0.22),
+        transparent 70%
+      ),
+      radial-gradient(
+        ellipse 60% 100% at 25% 0%,
+        rgba(255, 209, 220, 0.18),
+        transparent 70%
+      );
+    filter: blur(24px);
+  }
 }
 
-@media (max-width: 768px) {
-  section { padding: 4rem 0; }
+[data-theme="dark"] section {
+  &::before {
+    background:
+      radial-gradient(
+        ellipse 70% 100% at 30% 100%,
+        rgba(159, 130, 255, 0.14),
+        transparent 70%
+      ),
+      radial-gradient(
+        ellipse 60% 100% at 75% 100%,
+        rgba(127, 179, 255, 0.1),
+        transparent 70%
+      );
+  }
+  &::after {
+    background:
+      radial-gradient(
+        ellipse 70% 100% at 70% 0%,
+        rgba(127, 179, 255, 0.12),
+        transparent 70%
+      ),
+      radial-gradient(
+        ellipse 60% 100% at 25% 0%,
+        rgba(255, 159, 184, 0.1),
+        transparent 70%
+      );
+  }
 }
 
-// Reveal-on-scroll utility (hooked from JS via IntersectionObserver)
+// Hero is the first section — no top fade needed
+main > section:first-of-type::before {
+  display: none;
+}
+// Contact is the last — no bottom fade needed
+main > section:last-of-type::after {
+  display: none;
+}
+
+// =====================================================
+// GLOBAL TYPOGRAPHY — single source of truth
+// =====================================================
+
+// Signature gradient text: plain word + gradient accent
+.gradient-text {
+  background: linear-gradient(
+    120deg,
+    var(--pink-500) 0%,
+    var(--pink-400) 28%,
+    var(--lavender-300) 55%,
+    var(--blue-400) 80%,
+    var(--blue-500) 100%
+  );
+  background-size: 220% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-shift 7s ease infinite;
+  filter: drop-shadow(0 6px 20px rgba(244, 122, 160, 0.22));
+}
+
+[data-theme="dark"] .gradient-text {
+  filter: drop-shadow(0 6px 20px rgba(159, 130, 255, 0.28));
+}
+
+// =====================================================
+// PARALLAX — driven by ParallaxController
+// Any element with [data-parallax="0.25"] gets `translateY(var(--parallax-y))`
+// applied; preserve existing transforms by chaining via `translate`.
+// =====================================================
+[data-parallax] {
+  translate: 0 var(--parallax-y, 0);
+  will-change: translate;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-parallax] {
+    translate: 0 0;
+  }
+}
+
+// =====================================================
+// SCROLL-REVEAL SYSTEM
+// =====================================================
+// Apply `.reveal` on any element, optional direction modifier,
+// optional `--d` custom prop for stagger delay in seconds.
+//
+// <div class="reveal" style="--d: 0.15s"> ... </div>
+// <div class="reveal reveal-left"> ... </div>
+// <div class="reveal reveal-scale"> ... </div>
 .reveal {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.8s var(--ease-soft), transform 0.8s var(--ease-soft);
+  transform: translate3d(0, 32px, 0);
+  transition:
+    opacity 0.9s var(--ease-soft),
+    transform 0.9s var(--ease-soft);
+  transition-delay: var(--d, 0s);
+  will-change: opacity, transform;
+}
+
+.reveal-left {
+  transform: translate3d(-36px, 0, 0);
+}
+.reveal-right {
+  transform: translate3d(36px, 0, 0);
+}
+.reveal-scale {
+  transform: scale(0.94);
+}
+.reveal-blur {
+  filter: blur(10px);
+  transition:
+    opacity 0.9s var(--ease-soft),
+    transform 0.9s var(--ease-soft),
+    filter 0.9s var(--ease-soft);
+  transition-delay: var(--d, 0s);
 }
 
 .reveal.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: none;
+}
+
+// Auto-stagger helper: children of .reveal-stagger fade in sequentially.
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity 0.7s var(--ease-soft),
+    transform 0.7s var(--ease-soft);
+}
+.reveal-stagger.is-visible > * {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+@for $i from 1 through 12 {
+  .reveal-stagger.is-visible > *:nth-child(#{$i}) {
+    transition-delay: #{$i * 0.08}s;
+  }
 }
 
 // Reduced motion
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+// =====================================================
+// PRINT STYLESHEET — resume mode (Ctrl/Cmd + P)
+// =====================================================
+@media print {
+  // Basic paper setup
+  @page {
+    size: A4;
+    margin: 16mm 14mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    font-size: 10.5pt;
+    line-height: 1.45;
+  }
+
+  body::before,
+  main::before,
+  main::after {
+    display: none !important;
+  }
+
+  // Hide every non-essential visual / interactive element
+  [class*="bgGrid"],
+  [class*="bgGradient"],
+  [class*="bgDots"],
+  [class*="bgStars"],
+  [class*="bgNebula"],
+  [class*="bgOverlay"],
+  [class*="bgLayer"],
+  [class*="bgVignette"],
+  [class*="kanjiSpine"],
+  [class*="issueTag"],
+  [class*="fireflies"],
+  [class*="firefly"],
+  [class*="sakura"],
+  [class*="petal"],
+  [class*="sparkle"],
+  [class*="deco"],
+  [class*="ornament"],
+  [class*="commitStrip"],
+  [class*="lyricTicker"],
+  [class*="nowProgress"],
+  [class*="eq"],
+  [class*="marquee"],
+  [class*="livePulse"],
+  [class*="nowLive"],
+  [class*="nowDisc"],
+  video,
+  audio,
+  iframe,
+  canvas,
+  nav[aria-label="Chapter progress"],
+  header[class*="nav"],
+  [class*="Navbar"],
+  footer,
+  button,
+  .reveal {
+    display: none !important;
+  }
+
+  // Show reveal content (override animation hidden state)
+  .reveal {
+    display: block !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  // Kill all animations/transforms/filters
+  * {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+    box-shadow: none !important;
+    background-image: none !important;
+    backdrop-filter: none !important;
+    translate: none !important;
+  }
+
+  // Gradient text → solid for print (still readable)
+  .gradient-text,
+  [class*="gradientText"],
+  [class*="titleAccent"] {
+    background: none !important;
+    -webkit-text-fill-color: #c23a6b !important;
+    color: #c23a6b !important;
+  }
+
+  // Sections flow as normal blocks
+  section {
+    padding: 10mm 0 8mm !important;
+    scroll-margin: 0 !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  // Headings
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: #111 !important;
+    page-break-after: avoid;
+  }
+
+  h1 {
+    font-size: 20pt;
+  }
+  h2 {
+    font-size: 15pt;
+    margin-top: 4mm;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 2mm;
+  }
+  h3 {
+    font-size: 12pt;
+  }
+
+  // Links: show URL inline
+  a[href]::after {
+    content: " ⟨" attr(href) "⟩";
+    font-size: 8.5pt;
+    color: #666;
+    word-break: break-all;
+  }
+
+  a[href^="#"]::after,
+  a[href^="mailto:"]::after {
+    content: "";
+  }
+
+  // Hide full hero VN stage / fancy images — show just contact block
+  [class*="stageWrap"],
+  [class*="stage"],
+  [class*="bookContainer"],
+  [class*="constellation"],
+  [class*="idCard"] > [class*="Photo"],
+  img[class*="bgImg"] {
+    display: none !important;
+  }
+
+  // Keep project titles, experience timeline items, skill names readable
+  [class*="bento"],
+  [class*="card"] {
+    border: 1px solid #ddd !important;
+    background: #fafafa !important;
+    padding: 3mm !important;
+    margin-bottom: 3mm !important;
+    page-break-inside: avoid;
+  }
+
+  // Section divider lines (ambient bleed) off
+  section::before,
+  section::after {
+    display: none !important;
   }
 }

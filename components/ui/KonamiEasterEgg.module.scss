@@ -1,0 +1,247 @@
+// =====================================================
+// Konami Code Easter Egg — CRT terminal aesthetic
+// =====================================================
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background: radial-gradient(ellipse at center, rgba(10, 8, 20, 0.92), rgba(0, 0, 0, 0.96));
+  backdrop-filter: blur(6px);
+  animation: fade-in 0.25s ease-out;
+}
+
+.crt {
+  position: relative;
+  width: min(920px, 100%);
+  max-height: 85vh;
+  padding: 1.8rem 2rem 1.2rem;
+  background: #0b1020;
+  color: #8bff9f;
+  font-family: var(--font-mono);
+  border: 2px solid rgba(139, 255, 159, 0.25);
+  border-radius: 10px;
+  box-shadow:
+    0 0 0 1px rgba(139, 255, 159, 0.1),
+    0 0 60px rgba(139, 255, 159, 0.15),
+    0 30px 90px rgba(0, 0, 0, 0.6),
+    inset 0 0 80px rgba(139, 255, 159, 0.05);
+  overflow: hidden;
+  animation: boot-in 0.5s var(--ease-bounce);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 60%,
+      rgba(0, 0, 0, 0.45) 100%
+    );
+  }
+}
+
+.scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(139, 255, 159, 0.04) 2px,
+    rgba(139, 255, 159, 0.04) 3px
+  );
+  mix-blend-mode: overlay;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px dashed rgba(139, 255, 159, 0.2);
+}
+
+.prompt {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  flex-wrap: wrap;
+}
+
+.green {
+  color: #8bff9f;
+}
+.cyan {
+  color: #7ae7ff;
+}
+.dim {
+  color: rgba(139, 255, 159, 0.45);
+}
+.cmd {
+  color: #ffd987;
+}
+
+.close {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: rgba(139, 255, 159, 0.7);
+  background: transparent;
+  border: 1px solid rgba(139, 255, 159, 0.3);
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(139, 255, 159, 0.1);
+    color: #8bff9f;
+    border-color: rgba(139, 255, 159, 0.6);
+  }
+}
+
+.banner {
+  padding: 1rem 0 0.4rem;
+
+  pre {
+    color: #ffb3d4;
+    font-size: clamp(0.45rem, 1.3vw, 0.78rem);
+    line-height: 1.05;
+    margin: 0;
+    text-shadow: 0 0 10px rgba(255, 179, 212, 0.4);
+    animation: flicker 2.5s infinite;
+  }
+
+  .sub {
+    margin: 0.6rem 0 0;
+    font-size: 0.85rem;
+    color: #c5f7d2;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 1rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.card {
+  padding: 0.8rem 0.9rem;
+  background: rgba(139, 255, 159, 0.04);
+  border: 1px solid rgba(139, 255, 159, 0.18);
+  border-radius: 6px;
+  transition: all 0.3s var(--ease-bounce);
+
+  &:hover {
+    transform: translateY(-2px);
+    background: rgba(139, 255, 159, 0.08);
+    border-color: rgba(139, 255, 159, 0.35);
+  }
+
+  &[data-hue="pink"] {
+    border-color: rgba(255, 179, 212, 0.25);
+    .cardValue { color: #ffb3d4; }
+  }
+  &[data-hue="blue"] {
+    border-color: rgba(122, 231, 255, 0.25);
+    .cardValue { color: #7ae7ff; }
+  }
+  &[data-hue="lavender"] {
+    border-color: rgba(200, 182, 255, 0.25);
+    .cardValue { color: #c8b6ff; }
+  }
+}
+
+.cardLabel {
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.4rem;
+}
+
+.cardValue {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.foot {
+  margin-top: 1rem;
+  padding-top: 0.7rem;
+  border-top: 1px dashed rgba(139, 255, 159, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.7rem;
+  color: rgba(139, 255, 159, 0.7);
+  flex-wrap: wrap;
+
+  kbd {
+    font-family: var(--font-mono);
+    padding: 0.05rem 0.35rem;
+    background: rgba(139, 255, 159, 0.1);
+    border: 1px solid rgba(139, 255, 159, 0.3);
+    border-bottom-width: 2px;
+    border-radius: 3px;
+    font-size: 0.65rem;
+    color: #8bff9f;
+  }
+}
+
+@keyframes boot-in {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.02) scaleX(0.9);
+    filter: blur(4px);
+  }
+  55% {
+    opacity: 1;
+    transform: scaleY(1.05) scaleX(1.01);
+    filter: blur(0);
+  }
+  100% {
+    transform: scaleY(1) scaleX(1);
+  }
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  48% {
+    opacity: 1;
+  }
+  49% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.92;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crt {
+    animation: none;
+  }
+  .banner pre {
+    animation: none;
+  }
+}

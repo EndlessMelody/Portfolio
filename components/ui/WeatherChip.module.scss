@@ -1,0 +1,101 @@
+// =====================================================
+// Weather chip — compact pill showing live conditions
+// =====================================================
+
+.chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.12rem;
+  padding: 0.35rem 0.65rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  transition:
+    border-color 0.3s,
+    color 0.3s,
+    transform 0.3s var(--ease-bounce);
+  min-width: 58px;
+  align-self: stretch;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &[data-kind="clear-day"] {
+    border-color: rgba(255, 200, 120, 0.45);
+    .icon {
+      color: #ffb25a;
+    }
+  }
+  &[data-kind="clear-night"] {
+    border-color: rgba(170, 180, 255, 0.45);
+    .icon {
+      color: #a4b6ff;
+    }
+  }
+  &[data-kind="cloudy"] {
+    border-color: rgba(170, 180, 200, 0.45);
+    .icon {
+      color: #8a95b0;
+    }
+  }
+  &[data-kind="fog"] {
+    border-color: rgba(200, 200, 210, 0.45);
+    .icon {
+      color: #a0a0b0;
+    }
+  }
+  &[data-kind="rain"] {
+    border-color: rgba(130, 170, 240, 0.55);
+    .icon {
+      color: #5e9cff;
+    }
+  }
+  &[data-kind="snow"] {
+    border-color: rgba(210, 230, 255, 0.6);
+    .icon {
+      color: #bcdcff;
+    }
+  }
+  &[data-kind="storm"] {
+    border-color: rgba(170, 130, 240, 0.55);
+    .icon {
+      color: #a87dff;
+    }
+  }
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.1rem;
+}
+
+.temp {
+  font-weight: 700;
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: baseline;
+  line-height: 1;
+}
+
+.deg {
+  font-size: 0.7em;
+  opacity: 0.7;
+  margin-left: 1px;
+}
+
+.label {
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  line-height: 1;
+}

@@ -284,6 +284,69 @@
   margin-bottom: 1.5rem;
 }
 
+// ===== Time-aware greeting =====
+.greeting {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin: 0 0 0.4rem 0.1rem;
+  padding: 0.22rem 0.7rem 0.22rem 0.55rem;
+  font-family: var(--font-hand);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--pink-400);
+  border-radius: 4px;
+  animation: fade-up 0.9s var(--ease-soft) 0.1s both;
+  transition:
+    border-color 0.5s var(--ease-soft),
+    color 0.5s var(--ease-soft);
+
+  &[data-time="morning"] {
+    border-left-color: #ffd68a;
+    .greetIcon {
+      color: #ffb86b;
+    }
+  }
+  &[data-time="afternoon"] {
+    border-left-color: var(--pink-400);
+    .greetIcon {
+      color: var(--pink-500);
+    }
+  }
+  &[data-time="evening"] {
+    border-left-color: #d9a1ff;
+    .greetIcon {
+      color: #c68bff;
+    }
+  }
+  &[data-time="night"] {
+    border-left-color: var(--blue-400);
+    .greetIcon {
+      color: var(--blue-400);
+    }
+  }
+}
+
+.greetIcon {
+  font-size: 0.95rem;
+  line-height: 1;
+  transform: translateY(1px);
+}
+
+.greetText {
+  color: var(--text-primary);
+}
+
+.greetKana {
+  font-family: var(--font-hand);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+}
+
 .kanaLine {
   display: inline-flex;
   align-items: baseline;
@@ -303,8 +366,6 @@
   letter-spacing: 0.4em;
   color: var(--pink-500);
 }
-
-
 
 .title {
   font-family: var(--font-display);
@@ -343,7 +404,9 @@
   letter-spacing: 0.08em;
   vertical-align: baseline;
   opacity: 0.7;
-  transition: opacity 0.3s, color 0.3s;
+  transition:
+    opacity 0.3s,
+    color 0.3s;
 
   &:hover {
     opacity: 1;
@@ -514,8 +577,10 @@
 // ===== CTAs =====
 .actions {
   display: flex;
-  gap: 0.6rem;
+  align-items: stretch;
+  gap: 0.55rem;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
 
   @media (max-width: 1100px) {
     justify-content: center;
@@ -525,23 +590,67 @@
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.7rem 1.25rem;
+  gap: 0.6rem;
+  padding: 0.55rem 0.9rem 0.55rem 0.6rem;
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 0.85rem;
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-md);
   border: 1px solid transparent;
+  text-decoration: none;
   transition:
     transform 0.3s var(--ease-bounce),
     box-shadow 0.3s,
-    background 0.3s;
+    background 0.3s,
+    border-color 0.3s;
+}
+
+.btnIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.18);
+  flex-shrink: 0;
+}
+
+.btnBody {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.05;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.btnLabel {
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.btnHint {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.78;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .primary {
   background: linear-gradient(135deg, var(--pink-400), var(--blue-400));
   color: #fff;
   box-shadow: var(--shadow-soft);
+
+  .btnIcon {
+    background: rgba(255, 255, 255, 0.22);
+    color: #fff;
+  }
 
   &:hover {
     transform: translateY(-2px) scale(1.02);
@@ -554,6 +663,11 @@
   background: var(--glass-bg);
   border-color: var(--glass-border);
   backdrop-filter: blur(8px);
+
+  .btnIcon {
+    background: rgba(244, 122, 160, 0.14);
+    color: var(--pink-500);
+  }
 
   &:hover {
     transform: translateY(-2px);
@@ -618,7 +732,7 @@
 }
 
 .bentoHead {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.3rem;
   font-family: var(--font-mono);
@@ -638,84 +752,352 @@
   min-width: 0;
 }
 
-// .nowArt — clickable play/pause button
-.nowArt {
-  width: 34px;
-  height: 34px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  background: linear-gradient(
-    135deg,
-    var(--pink-400),
-    var(--lavender-300),
-    var(--blue-400)
-  );
-  background-size: 180% 180%;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
+// =====================================================
+// NOW PLAYING — Album art disc + lyric ticker
+// =====================================================
+
+// ON AIR badge next to the header
+.nowLive {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.1rem 0.4rem 0.1rem 0.35rem;
+  background: rgba(244, 122, 160, 0.12);
+  border: 1px solid rgba(244, 122, 160, 0.35);
+  border-radius: var(--radius-full);
+}
+
+.nowLiveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pink-500);
+  box-shadow: 0 0 8px rgba(244, 122, 160, 0.7);
   position: relative;
-  overflow: hidden;
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(244, 122, 160, 0.35);
-  transition:
-    transform 0.25s var(--ease-bounce),
-    box-shadow 0.25s,
-    background-position 0.4s;
-
-  &:hover:not(:disabled) {
-    transform: scale(1.08);
-    background-position: 100% 0;
-    box-shadow: 0 4px 14px rgba(244, 122, 160, 0.55);
-  }
-
-  &:active:not(:disabled) {
-    transform: scale(0.95);
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.55;
-  }
 
   &::after {
     content: "";
     position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      circle at 30% 20%,
-      rgba(255, 255, 255, 0.45),
-      transparent 55%
-    );
-    pointer-events: none;
-  }
-
-  svg {
-    position: relative;
-    z-index: 1;
-    transform: translateX(0.5px); // optical centering for play triangle
+    inset: -3px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(244, 122, 160, 0.5);
+    animation: ping-ring 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
 }
 
-// pulsing halo when actively playing
-.nowArtPlaying {
-  animation: pulse-glow 2.4s ease-in-out infinite;
+.nowLiveText {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--pink-500);
+}
 
-  svg {
-    transform: translateX(0); // pause icon centers naturally
+// =====================================================
+// Rotating album disc (click to play/pause)
+// =====================================================
+.nowDisc {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+  background: conic-gradient(
+    from 0deg,
+    var(--pink-400),
+    var(--lavender-300),
+    var(--blue-400),
+    var(--pink-400)
+  );
+  box-shadow:
+    0 2px 10px rgba(244, 122, 160, 0.35),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.25);
+  transition:
+    transform 0.3s var(--ease-bounce),
+    box-shadow 0.3s;
+
+  &:hover {
+    transform: scale(1.06);
+    box-shadow:
+      0 4px 16px rgba(244, 122, 160, 0.55),
+      inset 0 0 0 2px rgba(255, 255, 255, 0.4);
+
+    .nowDiscCenter {
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--pink-300);
+    outline-offset: 3px;
   }
 }
 
-@keyframes pulse-glow {
+.nowDiscPlaying {
+  animation: disc-spin 8s linear infinite;
+
+  .nowDiscGrooves,
+  .nowDiscCover,
+  .nowDiscKanji {
+    animation: none; // already spinning with parent
+  }
+}
+
+.nowDiscCover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.nowDiscKanji {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+.nowDiscGrooves {
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.18) 0,
+    rgba(0, 0, 0, 0.18) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+.nowDiscCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  color: var(--pink-500);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+
+  svg {
+    transform: translateX(0.5px);
+  }
+}
+
+.nowDiscPlaying .nowDiscCenter svg {
+  transform: translateX(0);
+}
+
+@keyframes disc-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// =====================================================
+// Progress bar (elapsed / total) — sits where the old
+// dashed border was so the card keeps its height.
+// =====================================================
+.nowProgress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.35rem;
+  border-top: 1px dashed var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.nowTime {
+  flex-shrink: 0;
+  min-width: 2.6em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.nowTime:first-child {
+  color: var(--pink-500);
+  font-weight: 700;
+}
+
+.nowBar {
+  position: relative;
+  flex: 1;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--bg-muted);
+  cursor: pointer;
+  overflow: visible;
+  transition: height 0.2s var(--ease-bounce);
+
+  &:hover,
+  &:focus-visible {
+    height: 6px;
+    outline: none;
+
+    .nowBarThumb {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+  }
+}
+
+.nowBarFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    var(--pink-400),
+    var(--lavender-300),
+    var(--blue-400)
+  );
+  box-shadow: 0 0 8px rgba(244, 122, 160, 0.45);
+  transition: width 0.15s linear;
+  will-change: width;
+}
+
+.nowBarThumb {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 0 2px var(--pink-400),
+    0 2px 6px rgba(244, 122, 160, 0.45);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  transition:
+    transform 0.2s var(--ease-bounce),
+    opacity 0.2s;
+  pointer-events: none;
+}
+
+// =====================================================
+// Lyric ticker marquee — now without its own dashed
+// top border (the progress bar provides the divider).
+// =====================================================
+.lyricTicker {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+  font-family: var(--font-hand);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  min-width: 0;
+}
+
+.lyricNote {
+  flex-shrink: 0;
+  color: var(--pink-400);
+  font-size: 0.85rem;
+  line-height: 1;
+  animation: note-bob 1.4s ease-in-out infinite;
+  opacity: 0.55;
+}
+
+.lyricPlaying .lyricNote {
+  opacity: 1;
+  color: var(--pink-500);
+}
+
+.lyricTrack {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+}
+
+.lyricStrip {
+  display: inline-flex;
+  gap: 2.5rem;
+  white-space: nowrap;
+  animation-play-state: paused;
+  transform: translateX(0);
+}
+
+.lyricPlaying .lyricStrip {
+  animation: lyric-marquee 28s linear infinite;
+  animation-play-state: running;
+}
+
+.lyricLine {
+  flex-shrink: 0;
+  position: relative;
+
+  &::after {
+    content: "✦";
+    margin-left: 1rem;
+    color: var(--pink-400);
+    opacity: 0.6;
+  }
+}
+
+@keyframes lyric-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes note-bob {
   0%,
   100% {
-    box-shadow: 0 2px 8px rgba(244, 122, 160, 0.35);
+    transform: translateY(0) rotate(0deg);
   }
   50% {
-    box-shadow:
-      0 2px 14px rgba(244, 122, 160, 0.7),
-      0 0 0 4px rgba(244, 122, 160, 0.12);
+    transform: translateY(-2px) rotate(-8deg);
   }
 }
 
@@ -857,6 +1239,82 @@
 }
 .buildSep {
   opacity: 0.4;
+}
+
+// ===== LIVE pulse badge =====
+.livePulse {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.1rem 0.4rem 0.1rem 0.35rem;
+  background: rgba(46, 204, 113, 0.12);
+  border: 1px solid rgba(46, 204, 113, 0.35);
+  border-radius: var(--radius-full);
+}
+
+.livePulseDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2ecc71;
+  box-shadow: 0 0 8px rgba(46, 204, 113, 0.6);
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(46, 204, 113, 0.55);
+    animation: ping-ring 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+}
+
+.livePulseText {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #2ecc71;
+}
+
+// ===== Commit strip (tiny animated contribution bars) =====
+.commitStrip {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 22px;
+  margin-top: 0.55rem;
+  padding-top: 0.35rem;
+  border-top: 1px dashed var(--border-subtle);
+}
+
+.commitBar {
+  flex: 1;
+  min-width: 3px;
+  border-radius: 1.5px;
+  background: linear-gradient(180deg, var(--pink-400), var(--blue-400));
+  transform-origin: bottom;
+  animation: commit-pulse 2.8s ease-in-out infinite;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+@keyframes commit-pulse {
+  0%,
+  100% {
+    transform: scaleY(0.85);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 0.95;
+  }
 }
 
 // =====================================================
@@ -1306,18 +1764,23 @@
 }
 
 // =====================================================
-// MARQUEE BELT
+// MARQUEE BELT — animated gradient hairlines,
+// tone-colored tech chips, kanji category pivots
 // =====================================================
 .marquee {
   position: relative;
   z-index: 2;
   margin-top: 2rem;
-  padding: 0.7rem 0;
+  padding: 0.85rem 0;
   flex-shrink: 0; // keep at bottom of hero flex column
   overflow: hidden;
-  border-top: 1px dashed var(--border-default);
-  border-bottom: 1px dashed var(--border-default);
-  background: linear-gradient(90deg, transparent, var(--bg-muted), transparent);
+  background:
+    radial-gradient(
+      60% 120% at 50% 50%,
+      rgba(244, 122, 160, 0.07),
+      transparent 70%
+    ),
+    linear-gradient(90deg, transparent, var(--bg-muted), transparent);
   mask-image: linear-gradient(
     90deg,
     transparent,
@@ -1332,37 +1795,317 @@
     black 94%,
     transparent
   );
+
+  [data-theme="dark"] & {
+    background:
+      radial-gradient(
+        60% 120% at 50% 50%,
+        rgba(244, 122, 160, 0.1),
+        transparent 70%
+      ),
+      linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.035),
+        transparent
+      );
+  }
+}
+
+// Animated gradient hairlines (replace dashed borders)
+.marqueeHairline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(244, 122, 160, 0.85) 18%,
+    rgba(180, 200, 255, 0.95) 42%,
+    rgba(200, 182, 255, 0.85) 68%,
+    rgba(244, 122, 160, 0.85) 88%,
+    transparent 100%
+  );
+  background-size: 220% 100%;
+  animation: hairline-shimmer 7s linear infinite;
+  opacity: 0.75;
+  filter: drop-shadow(0 0 4px rgba(244, 122, 160, 0.35));
+
+  &[data-top] {
+    top: 0;
+  }
+
+  &[data-bottom] {
+    bottom: 0;
+    animation-direction: reverse;
+  }
+}
+
+// Soft sweeping shimmer across the belt
+.marqueeShimmer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 65%
+  );
+  background-size: 240% 100%;
+  animation: belt-sweep 9s linear infinite;
+  mix-blend-mode: screen;
+  opacity: 0.7;
 }
 
 .marqueeTrack {
   display: flex;
   width: max-content;
-  animation: marquee 40s linear infinite;
+  animation: belt-scroll 42s linear infinite;
+  will-change: transform;
+}
+
+@keyframes belt-scroll {
+  // letters scroll left → right
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 .marqueeRow {
   display: flex;
   align-items: center;
-  gap: 2rem;
-  padding-right: 2rem;
+  gap: 1.6rem;
+  padding-right: 1.6rem;
   flex-shrink: 0;
 }
 
 .marqueeItem {
+  --tone-color: var(--blue-400);
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  color: var(--text-secondary);
+  gap: 0.6rem;
+  padding: 0.1rem 0.1rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
   white-space: nowrap;
+  position: relative;
+  transition:
+    color 0.3s var(--ease-soft),
+    text-shadow 0.3s,
+    transform 0.3s var(--ease-soft);
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 1.5rem;
+    right: 0;
+    bottom: -3px;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--tone-color),
+      transparent
+    );
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s var(--ease-soft);
+    opacity: 0.8;
+  }
+
+  &:hover {
+    color: var(--text-primary);
+    transform: translateY(-1px);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
+
+    [data-theme="dark"] & {
+      text-shadow: 0 0 12px rgba(255, 255, 255, 0.55);
+    }
+
+    &::after {
+      transform: scaleX(1);
+    }
+
+    .marqueeDot {
+      color: var(--tone-color);
+      transform: scale(1.4) rotate(180deg);
+      text-shadow: 0 0 12px var(--tone-color);
+    }
+  }
+
+  &.tone-ml {
+    --tone-color: var(--pink-400);
+  }
+  &.tone-web {
+    --tone-color: var(--blue-400);
+  }
+  &.tone-infra {
+    --tone-color: var(--lavender-300);
+  }
+}
+
+.marqueeLabel {
+  line-height: 1;
 }
 
 .marqueeDot {
-  color: var(--pink-400);
-  font-size: 0.78rem;
+  color: var(--tone-color);
+  font-size: 0.65rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  animation: sparkle-spin 6s linear infinite;
+  animation-delay: var(--dot-delay, 0s);
+  text-shadow: 0 0 6px color-mix(in oklab, var(--tone-color) 60%, transparent);
+  transition:
+    transform 0.4s var(--ease-bounce),
+    color 0.3s,
+    text-shadow 0.3s;
+}
+
+// Kanji category pivot (e.g., 学 MACHINE LEARNING)
+.marqueeKanji {
+  --tone-color: var(--pink-400);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.15rem 0.75rem 0.15rem 0.6rem;
+  border: 1px solid color-mix(in oklab, var(--tone-color) 40%, transparent);
+  border-radius: var(--radius-full);
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--tone-color) 14%, transparent),
+    transparent 80%
+  );
+  position: relative;
+  white-space: nowrap;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 0 18px -10px var(--tone-color);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at 20% 50%,
+      color-mix(in oklab, var(--tone-color) 22%, transparent),
+      transparent 60%
+    );
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  &.tone-ml {
+    --tone-color: var(--pink-400);
+  }
+  &.tone-web {
+    --tone-color: var(--blue-400);
+  }
+  &.tone-infra {
+    --tone-color: var(--lavender-300);
+  }
+}
+
+.marqueeKanjiGlyph {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1;
+  background: linear-gradient(
+    180deg,
+    var(--tone-color),
+    color-mix(in oklab, var(--tone-color) 55%, #fff 20%)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(
+    0 0 4px color-mix(in oklab, var(--tone-color) 45%, transparent)
+  );
+  position: relative;
+  animation: kanji-breathe 3.2s ease-in-out infinite;
+}
+
+.marqueeKanjiLabel {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--tone-color) 75%, var(--text-primary) 25%);
+  line-height: 1;
+  position: relative;
+}
+
+@keyframes hairline-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes belt-sweep {
+  0% {
+    background-position: 220% 0;
+  }
+  100% {
+    background-position: -220% 0;
+  }
+}
+
+@keyframes sparkle-spin {
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 0.9;
+  }
+}
+
+@keyframes kanji-breathe {
+  0%,
+  100% {
+    filter: drop-shadow(
+      0 0 4px color-mix(in oklab, var(--tone-color) 45%, transparent)
+    );
+    transform: translateY(0);
+  }
+  50% {
+    filter: drop-shadow(
+      0 0 10px color-mix(in oklab, var(--tone-color) 70%, transparent)
+    );
+    transform: translateY(-1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marqueeHairline,
+  .marqueeShimmer,
+  .marqueeDot,
+  .marqueeKanjiGlyph {
+    animation: none !important;
+  }
 }
 
 // =====================================================

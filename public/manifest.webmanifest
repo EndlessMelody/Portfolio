@@ -1,0 +1,31 @@
+{
+  "name": "Melody — Portfolio",
+  "short_name": "Melody 夢音美",
+  "description": "Pastel anime-themed portfolio of Melody (Đăng Khoa) — AI/ML engineer & SE student.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff3f7",
+  "theme_color": "#f47aa0",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["portfolio", "productivity", "education"]
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Github,
   Linkedin,
@@ -17,9 +17,10 @@ import {
 } from "lucide-react";
 import { personal } from "@/lib/data";
 import { useAudioPlayer } from "@/components/providers/AudioPlayerProvider";
+import { useTimeGreeting } from "@/lib/hooks";
+import { GitHubLive } from "@/components/ui/GitHubLive";
+import { WeatherHost } from "@/components/ui/WeatherHost";
 import styles from "./Hero.module.scss";
-
-
 
 const rotatingLines = [
   "building ML models with a heart ♡",
@@ -42,10 +43,28 @@ export function Hero() {
   );
 
   const [timeOfDay, setTimeOfDay] = useState<"day" | "sunset" | "night">("day");
-  const [scrollY, setScrollY] = useState(0);
-  const { isPlaying, togglePlay, hasError } = useAudioPlayer();
+  const { isPlaying, togglePlay, hasError, duration, currentTime, seek } =
+    useAudioPlayer();
+  const greeting = useTimeGreeting();
 
+  const formatTime = (s: number) => {
+    if (!Number.isFinite(s) || s < 0) return "0:00";
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return `${m}:${sec.toString().padStart(2, "0")}`;
+  };
 
+  const progressPct = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    const track = e.currentTarget;
+    const rect = track.getBoundingClientRect();
+    const ratio = Math.max(
+      0,
+      Math.min(1, (e.clientX - rect.left) / rect.width),
+    );
+    seek(ratio * duration);
+  };
 
   // Detect time of day for ambient color shift
   useEffect(() => {
@@ -58,13 +77,6 @@ export function Hero() {
     updateTime();
     const interval = setInterval(updateTime, 60000); // update every minute
     return () => clearInterval(interval);
-  }, []);
-
-  // Scroll parallax for kanji spine and issue tag
-  useEffect(() => {
-    const onScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
@@ -112,22 +124,14 @@ export function Hero() {
       <div className={styles.bgGradient} aria-hidden />
 
       {/* Vertical kanji watermark spine — far left with parallax */}
-      <div
-        className={styles.kanjiSpine}
-        aria-hidden
-        style={{ transform: `translateY(${scrollY * 0.15}px)` }}
-      >
+      <div className={styles.kanjiSpine} aria-hidden data-parallax="0.18">
         {personal.kanjiChars.map((c, i) => (
           <span key={i}>{c}</span>
         ))}
       </div>
 
       {/* Magazine spine — far right with parallax (slower) */}
-      <div
-        className={styles.issueTag}
-        aria-hidden
-        style={{ transform: `translateY(${scrollY * 0.08}px)` }}
-      >
+      <div className={styles.issueTag} aria-hidden data-parallax="0.1">
         ISSUE 01 · 自己紹介編 · 2026
       </div>
 
@@ -144,14 +148,26 @@ export function Hero() {
           </div>
 
           <div className={styles.nameBlock}>
+            <p
+              className={styles.greeting}
+              data-time={greeting.time}
+              aria-live="polite"
+            >
+              <span className={styles.greetIcon} aria-hidden>
+                {greeting.icon}
+              </span>
+              <span className={styles.greetText}>{greeting.text}</span>
+              <span className={styles.greetKana} aria-hidden>
+                ({greeting.kana})
+              </span>
+            </p>
+
             <div className={styles.kanaLine} aria-hidden>
               <span className={styles.kanaSmall}>{personal.kana}</span>
             </div>
 
             <h1 className={styles.title}>
-              <span className={styles.gradientText}>
-                {personal.name}
-              </span>
+              <span className={styles.gradientText}>{personal.name}</span>
               <span className={styles.kanjiSuffix}>({personal.kanji})</span>
               <span className={styles.titlePeriod}>.</span>
             </h1>
@@ -180,6 +196,13 @@ export function Hero() {
 
           <p className={styles.tagline}>{personal.tagline}</p>
 
+          <GitHubLive
+            username={
+              personal.socials.github.replace(/\/$/, "").split("/").pop() ??
+              "EndlessMelody"
+            }
+          />
+
           <div className={styles.typed} role="status" aria-live="polite">
             <span className={styles.typedPrefix}>~/melody</span>
             <span className={styles.typedArrow}>❯</span>
@@ -191,12 +214,28 @@ export function Hero() {
 
           <div className={styles.actions}>
             <a href="#projects" className={`${styles.btn} ${styles.primary}`}>
-              <Sparkles size={15} strokeWidth={2.5} />
-              View my quests
+              <span className={styles.btnIcon} aria-hidden>
+                <Sparkles size={16} strokeWidth={2.5} />
+              </span>
+              <span className={styles.btnBody}>
+                <span className={styles.btnLabel}>View my quests</span>
+                <span className={styles.btnHint}>→ projects</span>
+              </span>
             </a>
             <a href="#contact" className={`${styles.btn} ${styles.ghost}`}>
-              Say hi ✿
+              <span className={styles.btnIcon} aria-hidden>
+                <Mail size={16} strokeWidth={2.5} />
+              </span>
+              <span className={styles.btnBody}>
+                <span className={styles.btnLabel}>Say hi ✿</span>
+                <span className={styles.btnHint}>→ contact</span>
+              </span>
             </a>
+            <WeatherHost
+              lat={personal.coords.lat}
+              lon={personal.coords.lon}
+              timezone={personal.coords.timezone}
+            />
           </div>
 
           {/* === Bento mini cards (now on the LEFT) === */}
@@ -204,21 +243,46 @@ export function Hero() {
             <div className={`${styles.bento} ${styles.bentoNow}`}>
               <div className={styles.bentoHead}>
                 <Music2 size={10} /> NOW PLAYING
+                {isPlaying && (
+                  <span className={styles.nowLive} aria-hidden>
+                    <span className={styles.nowLiveDot} />
+                    <span className={styles.nowLiveText}>ON AIR</span>
+                  </span>
+                )}
               </div>
+
               <div className={styles.nowMain}>
+                {/* Rotating album art / disc */}
                 <button
                   type="button"
                   onClick={togglePlay}
-                  className={`${styles.nowArt} ${isPlaying ? styles.nowArtPlaying : ""}`}
+                  className={`${styles.nowDisc} ${isPlaying ? styles.nowDiscPlaying : ""}`}
                   aria-label={isPlaying ? "Pause track" : "Play track"}
                   aria-pressed={isPlaying}
+                  title={isPlaying ? "Pause" : "Play"}
                 >
-                  {isPlaying ? (
-                    <Pause size={14} fill="currentColor" strokeWidth={0} />
+                  {personal.nowPlaying.cover ? (
+                    <img
+                      src={personal.nowPlaying.cover}
+                      alt=""
+                      className={styles.nowDiscCover}
+                      aria-hidden
+                    />
                   ) : (
-                    <Play size={14} fill="currentColor" strokeWidth={0} />
+                    <span className={styles.nowDiscKanji} aria-hidden>
+                      {personal.nowPlaying.kanji}
+                    </span>
                   )}
+                  <span className={styles.nowDiscGrooves} aria-hidden />
+                  <span className={styles.nowDiscCenter} aria-hidden>
+                    {isPlaying ? (
+                      <Pause size={11} fill="currentColor" strokeWidth={0} />
+                    ) : (
+                      <Play size={11} fill="currentColor" strokeWidth={0} />
+                    )}
+                  </span>
                 </button>
+
                 <div className={styles.nowText}>
                   <div className={styles.nowTrack}>
                     {hasError ? "Track unavailable" : personal.nowPlaying.track}
@@ -229,6 +293,7 @@ export function Hero() {
                       : personal.nowPlaying.artist}
                   </div>
                 </div>
+
                 <div
                   className={`${styles.eq} ${isPlaying ? styles.eqPlaying : ""}`}
                   aria-hidden
@@ -239,11 +304,80 @@ export function Hero() {
                   <span />
                 </div>
               </div>
+
+              {/* Progress strip: real elapsed/total time with click-to-seek.
+                  Replaces the previous dashed border so the card keeps
+                  the exact same height as before. */}
+              {!hasError && (
+                <div className={styles.nowProgress}>
+                  <span className={styles.nowTime}>
+                    {formatTime(currentTime)}
+                  </span>
+                  <div
+                    className={styles.nowBar}
+                    role="slider"
+                    aria-label="Seek"
+                    aria-valuemin={0}
+                    aria-valuemax={Math.max(1, Math.round(duration))}
+                    aria-valuenow={Math.round(currentTime)}
+                    tabIndex={0}
+                    onClick={handleSeek}
+                    onKeyDown={(e) => {
+                      if (e.key === "ArrowLeft") seek(currentTime - 5);
+                      else if (e.key === "ArrowRight") seek(currentTime + 5);
+                    }}
+                  >
+                    <span
+                      className={styles.nowBarFill}
+                      style={{ width: `${progressPct}%` }}
+                    />
+                    <span
+                      className={styles.nowBarThumb}
+                      style={{ left: `${progressPct}%` }}
+                      aria-hidden
+                    />
+                  </div>
+                  <span className={styles.nowTime}>
+                    {duration > 0 ? formatTime(duration) : "--:--"}
+                  </span>
+                </div>
+              )}
+
+              {/* Lyric ticker — scrolls when playing, static when paused.
+                  Lines are just vibe placeholders; edit `nowPlaying.lyrics`
+                  in `lib/data.ts` to customise. */}
+              {!hasError && personal.nowPlaying.lyrics?.length > 0 && (
+                <div
+                  className={`${styles.lyricTicker} ${isPlaying ? styles.lyricPlaying : ""}`}
+                  aria-hidden
+                >
+                  <span className={styles.lyricNote}>♪</span>
+                  <div className={styles.lyricTrack}>
+                    <div className={styles.lyricStrip}>
+                      {personal.nowPlaying.lyrics.map((line, i) => (
+                        <span key={`a-${i}`} className={styles.lyricLine}>
+                          {line}
+                        </span>
+                      ))}
+                      {/* Duplicate for seamless marquee */}
+                      {personal.nowPlaying.lyrics.map((line, i) => (
+                        <span key={`b-${i}`} className={styles.lyricLine}>
+                          {line}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className={`${styles.bento} ${styles.bentoBuild}`}>
               <div className={styles.bentoHead}>
                 <Hammer size={10} /> CURRENTLY BUILDING
+                <span className={styles.livePulse} aria-hidden>
+                  <span className={styles.livePulseDot} />
+                  <span className={styles.livePulseText}>LIVE</span>
+                </span>
               </div>
               <div className={styles.buildName}>
                 {personal.currentlyBuilding.name}
@@ -260,6 +394,18 @@ export function Hero() {
                 </span>
                 <span className={styles.buildSep}>·</span>
                 <span>{personal.currentlyBuilding.stack}</span>
+              </div>
+              <div className={styles.commitStrip} aria-hidden>
+                {Array.from({ length: 14 }).map((_, i) => (
+                  <span
+                    key={i}
+                    className={styles.commitBar}
+                    style={{
+                      height: `${30 + ((i * 37) % 70)}%`,
+                      animationDelay: `${i * 0.08}s`,
+                    }}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -384,26 +530,103 @@ export function Hero() {
 
       {/* ===== Tech marquee belt ===== */}
       <div className={styles.marquee} aria-hidden>
+        <span className={styles.marqueeHairline} data-top aria-hidden />
+        <span className={styles.marqueeHairline} data-bottom aria-hidden />
+        <span className={styles.marqueeShimmer} aria-hidden />
         <div className={styles.marqueeTrack}>
-          <MarqueeRow items={personal.techBelt} />
-          <MarqueeRow items={personal.techBelt} />
+          <MarqueeRow />
+          <MarqueeRow />
         </div>
       </div>
     </section>
   );
 }
 
-function MarqueeRow({ items }: { items: readonly string[] }) {
+type BeltToken =
+  | { kind: "tech"; label: string; tone: "ml" | "web" | "infra" }
+  | {
+      kind: "kanji";
+      kanji: string;
+      label: string;
+      tone: "ml" | "web" | "infra";
+    };
+
+const ML_SET = new Set<string>([
+  "Python",
+  "PyTorch",
+  "CUDA",
+  "Diffusers",
+  "Transformers",
+  "LangChain",
+  "Vector DB",
+]);
+const INFRA_SET = new Set<string>(["FastAPI", "Docker", "MLOps"]);
+
+function toneOf(name: string): "ml" | "web" | "infra" {
+  if (ML_SET.has(name)) return "ml";
+  if (INFRA_SET.has(name)) return "infra";
+  return "web";
+}
+
+function buildBelt(): BeltToken[] {
+  const buckets: Record<"ml" | "web" | "infra", string[]> = {
+    ml: [],
+    web: [],
+    infra: [],
+  };
+  for (const t of personal.techBelt) buckets[toneOf(t)].push(t);
+
+  const heads: Record<
+    "ml" | "web" | "infra",
+    { kanji: string; label: string }
+  > = {
+    ml: { kanji: "学", label: "Machine Learning" },
+    web: { kanji: "技", label: "Web Craft" },
+    infra: { kanji: "築", label: "Infra" },
+  };
+
+  const out: BeltToken[] = [];
+  (["ml", "web", "infra"] as const).forEach((key) => {
+    if (!buckets[key].length) return;
+    out.push({
+      kind: "kanji",
+      kanji: heads[key].kanji,
+      label: heads[key].label,
+      tone: key,
+    });
+    for (const label of buckets[key])
+      out.push({ kind: "tech", label, tone: key });
+  });
+  return out;
+}
+
+const BELT_TOKENS: BeltToken[] = buildBelt();
+
+function MarqueeRow() {
   return (
     <div className={styles.marqueeRow}>
-      {items.map((t, i) => (
-        <span key={`${t}-${i}`} className={styles.marqueeItem}>
-          <span className={styles.marqueeDot} aria-hidden>
-            ✦
+      {BELT_TOKENS.map((t, i) =>
+        t.kind === "kanji" ? (
+          <span
+            key={`k-${i}`}
+            className={`${styles.marqueeKanji} ${styles[`tone-${t.tone}`] ?? ""}`}
+          >
+            <span className={styles.marqueeKanjiGlyph}>{t.kanji}</span>
+            <span className={styles.marqueeKanjiLabel}>{t.label}</span>
           </span>
-          {t}
-        </span>
-      ))}
+        ) : (
+          <span
+            key={`t-${i}`}
+            className={`${styles.marqueeItem} ${styles[`tone-${t.tone}`] ?? ""}`}
+            style={{ ["--dot-delay" as string]: `${(i * 0.35) % 3}s` }}
+          >
+            <span className={styles.marqueeDot} aria-hidden>
+              ✦
+            </span>
+            <span className={styles.marqueeLabel}>{t.label}</span>
+          </span>
+        ),
+      )}
     </div>
   );
 }

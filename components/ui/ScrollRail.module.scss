@@ -1,0 +1,152 @@
+// =====================================================
+// Reading Progress Bar (top) + Chapter Rail (right side)
+// =====================================================
+
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  background: linear-gradient(
+    90deg,
+    var(--pink-500),
+    var(--pink-400) 30%,
+    var(--lavender-300) 55%,
+    var(--blue-400) 80%,
+    var(--blue-500)
+  );
+  z-index: 100;
+  pointer-events: none;
+  box-shadow: 0 1px 6px rgba(244, 122, 160, 0.4);
+  transition: transform 0.12s linear;
+}
+
+.rail {
+  position: fixed;
+  top: 50%;
+  right: 1.25rem;
+  transform: translateY(-50%);
+  z-index: 40;
+  pointer-events: auto;
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+}
+
+.item {
+  position: relative;
+
+  &.active .dot {
+    transform: scale(1.4);
+    background: linear-gradient(135deg, var(--pink-400), var(--blue-400));
+    box-shadow:
+      0 0 0 3px rgba(244, 122, 160, 0.2),
+      0 0 14px rgba(244, 122, 160, 0.5);
+  }
+
+  &.active .tooltip {
+    opacity: 1;
+    transform: translate(-0.5rem, -50%);
+    pointer-events: auto;
+  }
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  text-decoration: none;
+  outline: none;
+
+  &:focus-visible .dot {
+    box-shadow:
+      0 0 0 3px var(--pink-300),
+      0 0 14px rgba(244, 122, 160, 0.6);
+  }
+
+  &:hover .tooltip {
+    opacity: 1;
+    transform: translate(-0.5rem, -50%);
+    pointer-events: auto;
+  }
+
+  &:hover .dot {
+    transform: scale(1.25);
+    border-color: var(--pink-400);
+  }
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 1.5px solid var(--border-default);
+  transition:
+    transform 0.35s var(--ease-bounce),
+    background 0.3s,
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+
+.tooltip {
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  transform: translate(0, -50%);
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  padding: 0.35rem 0.65rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.25s var(--ease-soft),
+    transform 0.25s var(--ease-soft);
+}
+
+.no {
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--pink-500);
+}
+
+.label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.kana {
+  font-family: var(--font-hand);
+  font-size: 0.62rem;
+  color: var(--text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress {
+    transition: none;
+  }
+}

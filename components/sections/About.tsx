@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import {
+import React, {
   useCallback,
   useEffect,
   useMemo,
@@ -200,7 +200,9 @@ export function About() {
 
   const currentThread = useMemo(
     () =>
-      threadId ? aboutVN.threads.find((t) => t.id === threadId) ?? null : null,
+      threadId
+        ? (aboutVN.threads.find((t) => t.id === threadId) ?? null)
+        : null,
     [threadId],
   );
 
@@ -371,7 +373,7 @@ export function About() {
   // Preview text when hovering a choice in menu phase
   const previewText =
     phase === "menu" && hoveredChoice
-      ? aboutVN.threads.find((t) => t.id === hoveredChoice)?.preview ?? ""
+      ? (aboutVN.threads.find((t) => t.id === hoveredChoice)?.preview ?? "")
       : null;
 
   return (
@@ -383,19 +385,19 @@ export function About() {
       <div className={styles.bgGradient} aria-hidden />
 
       {/* Kanji spine (left) */}
-      <div className={styles.kanjiSpine} aria-hidden>
+      <div className={styles.kanjiSpine} aria-hidden data-parallax="0.18">
         <span>物</span>
         <span>語</span>
         <span>編</span>
       </div>
 
       {/* Magazine issue tag (right) */}
-      <div className={styles.issueTag} aria-hidden>
+      <div className={styles.issueTag} aria-hidden data-parallax="0.1">
         ISSUE 02 · 物語編 · 2026
       </div>
 
       <div className="container">
-        <header className={styles.header}>
+        <header className={`${styles.header} reveal`}>
           <div className={styles.chapter}>
             <span className={styles.chapterBar} aria-hidden />
             <span className={styles.chapterNo}>CH.02</span>
@@ -416,17 +418,32 @@ export function About() {
           </p>
         </header>
 
-        <div className={styles.stageWrap}>
-          <span className={`${styles.stageDeco} ${styles.stageDeco1}`} aria-hidden>
+        <div
+          className={`${styles.stageWrap} reveal reveal-scale`}
+          style={{ "--d": "0.15s" } as React.CSSProperties}
+        >
+          <span
+            className={`${styles.stageDeco} ${styles.stageDeco1}`}
+            aria-hidden
+          >
             ♡
           </span>
-          <span className={`${styles.stageDeco} ${styles.stageDeco2}`} aria-hidden>
+          <span
+            className={`${styles.stageDeco} ${styles.stageDeco2}`}
+            aria-hidden
+          >
             ✦
           </span>
-          <span className={`${styles.stageDeco} ${styles.stageDeco3}`} aria-hidden>
+          <span
+            className={`${styles.stageDeco} ${styles.stageDeco3}`}
+            aria-hidden
+          >
             ♪
           </span>
-          <span className={`${styles.stageDeco} ${styles.stageDeco4}`} aria-hidden>
+          <span
+            className={`${styles.stageDeco} ${styles.stageDeco4}`}
+            aria-hidden
+          >
             ♬
           </span>
 

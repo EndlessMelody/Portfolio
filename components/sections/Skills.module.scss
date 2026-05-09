@@ -7,7 +7,6 @@
 .skills {
   position: relative;
   padding: 3rem 0 4.5rem;
-  overflow: hidden;
   isolation: isolate;
 }
 
@@ -241,23 +240,6 @@
   letter-spacing: -0.02em;
   margin: 0;
   line-height: 1;
-}
-
-.titleAccent {
-  background: linear-gradient(
-    120deg,
-    var(--pink-500),
-    var(--pink-400) 30%,
-    var(--lavender-300) 55%,
-    var(--blue-400) 80%,
-    var(--blue-500)
-  );
-  background-size: 220% 220%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: gradient-shift 7s ease infinite;
-  filter: drop-shadow(0 6px 20px rgba(244, 122, 160, 0.22));
 }
 
 .subtitle {
@@ -1208,7 +1190,7 @@
   stroke-linecap: round;
   filter: drop-shadow(0 0 4px var(--skill-color));
   transition: stroke-dashoffset 1s var(--ease-bounce);
-  
+
   .skillNode[data-depth="0"] & {
     stroke: #fff;
     filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
@@ -1222,6 +1204,656 @@
   text-transform: uppercase;
   color: var(--text-muted);
   font-weight: 600;
+}
+
+// =====================================================
+// CONSTELLATION TOGGLE (on magic circle)
+// =====================================================
+.constellationToggle {
+  position: absolute;
+  bottom: -2.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 1.1rem 0.55rem 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  z-index: 6;
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.12),
+    0 0 24px rgba(244, 122, 160, 0.18);
+  transition: all 0.3s var(--ease-bounce);
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      120deg,
+      transparent 30%,
+      rgba(244, 122, 160, 0.18) 50%,
+      transparent 70%
+    );
+    background-size: 220% 100%;
+    animation: const-toggle-shimmer 5s linear infinite;
+    pointer-events: none;
+  }
+
+  svg {
+    color: var(--pink-400);
+    transition: transform 0.4s var(--ease-bounce);
+  }
+
+  &:hover,
+  &:focus-visible {
+    transform: translateX(-50%) translateY(-2px);
+    border-color: var(--pink-400);
+    box-shadow:
+      0 10px 26px rgba(0, 0, 0, 0.18),
+      0 0 32px rgba(244, 122, 160, 0.4);
+
+    svg {
+      transform: rotate(72deg) scale(1.15);
+    }
+  }
+}
+
+@keyframes const-toggle-shimmer {
+  0% {
+    background-position: 220% 0;
+  }
+  100% {
+    background-position: -220% 0;
+  }
+}
+
+.constellationToggleLabel {
+  letter-spacing: 0.18em;
+}
+
+.constellationToggleKana {
+  font-family: var(--font-hand);
+  letter-spacing: 0.15em;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--blue-400);
+  margin-left: 0.15rem;
+}
+
+// SkillTree top-bar "Constellation" jump button
+.treeConstellationBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem 0.5rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.25s var(--ease-bounce);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+
+  svg {
+    color: var(--pink-400);
+    transition: transform 0.4s var(--ease-bounce);
+  }
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-2px);
+    border-color: var(--pink-400);
+    color: var(--pink-500);
+    box-shadow: 0 8px 18px rgba(244, 122, 160, 0.25);
+
+    svg {
+      transform: rotate(180deg) scale(1.12);
+    }
+  }
+}
+
+// =====================================================
+// CONSTELLATION VIEW — Phase 3
+// =====================================================
+.constellationWrap {
+  position: relative;
+  width: 100%;
+  max-width: 980px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.constellationTopBar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 0.5rem;
+
+  @media (max-width: 760px) {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+}
+
+.constellationTitle {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.7rem;
+  flex: 1;
+
+  @media (max-width: 760px) {
+    justify-content: flex-start;
+  }
+}
+
+.constellationTitleSigil {
+  font-size: 1.05rem;
+  color: var(--pink-400);
+  filter: drop-shadow(0 0 6px rgba(244, 122, 160, 0.55));
+  animation: const-sigil-spin 9s linear infinite;
+}
+
+@keyframes const-sigil-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.constellationHeading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.constellationKana {
+  font-family: var(--font-hand);
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--blue-400);
+  letter-spacing: 0.12em;
+}
+
+.constellationTagline {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+// Constellation canvas
+.constellation {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-height: 720px;
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(244, 122, 160, 0.08),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at top right,
+      rgba(127, 179, 255, 0.07),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at bottom left,
+      rgba(200, 182, 255, 0.07),
+      transparent 60%
+    ),
+    var(--bg-elevated);
+  overflow: hidden;
+  box-shadow:
+    0 22px 55px rgba(0, 0, 0, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+
+  @media (max-width: 760px) {
+    max-height: 560px;
+  }
+}
+
+.constellationSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+// Twinkling backdrop stars
+.constStarfield {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.constStar {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--pink-200, #ffd2dc);
+  box-shadow: 0 0 6px rgba(244, 122, 160, 0.6);
+  opacity: 0;
+  animation: const-twinkle 5s ease-in-out infinite;
+
+  &:nth-child(3n) {
+    background: var(--blue-200, #bdd6ff);
+    box-shadow: 0 0 6px rgba(127, 179, 255, 0.6);
+  }
+  &:nth-child(5n) {
+    background: var(--lavender-200, #d8cdff);
+    box-shadow: 0 0 6px rgba(200, 182, 255, 0.6);
+  }
+}
+
+@keyframes const-twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.2);
+  }
+}
+
+// Per-class sector glows
+.constSectorGlow {
+  opacity: 0.85;
+  animation: const-sector-breathe 7s var(--ease-soft) infinite;
+  pointer-events: none;
+}
+
+@keyframes const-sector-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+// Soft pentagon spine
+.constPentagon {
+  fill: none;
+  stroke: var(--border-default);
+  stroke-width: 1;
+  opacity: 0.4;
+  stroke-dasharray: 3 6;
+  filter: drop-shadow(0 0 6px rgba(244, 122, 160, 0.18));
+}
+
+// Within-class edges
+.constEdge {
+  fill: none;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  opacity: 0;
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  animation: const-edge-draw 0.9s var(--ease-soft) forwards;
+  transition:
+    opacity 0.3s,
+    stroke-width 0.3s;
+
+  &[data-active] {
+    opacity: 0.85 !important;
+    stroke-width: 2;
+  }
+
+  &[data-dimmed] {
+    opacity: 0.08 !important;
+  }
+}
+
+@keyframes const-edge-draw {
+  to {
+    stroke-dashoffset: 0;
+    opacity: 0.32;
+  }
+}
+
+// Cross-class bridges
+.constBridgeGroup {
+  pointer-events: none;
+}
+
+.constBridge {
+  fill: none;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-dasharray: 6 10;
+  opacity: 0;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.45));
+  pointer-events: stroke;
+  cursor: pointer;
+  animation:
+    const-bridge-fade-in 0.8s var(--ease-soft) forwards,
+    const-bridge-flow 6s linear infinite;
+  transition:
+    opacity 0.3s,
+    stroke-width 0.3s,
+    filter 0.3s;
+
+  &[data-active] {
+    opacity: 1 !important;
+    stroke-width: 2.4;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.85));
+  }
+
+  &[data-dimmed] {
+    opacity: 0.18 !important;
+  }
+}
+
+@keyframes const-bridge-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.7;
+  }
+}
+
+@keyframes const-bridge-flow {
+  to {
+    stroke-dashoffset: -240;
+  }
+}
+
+.constBridgeLabel {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  fill: var(--text-secondary);
+  opacity: 0;
+  paint-order: stroke;
+  stroke: var(--bg-elevated);
+  stroke-width: 3;
+  transition:
+    opacity 0.3s,
+    fill 0.3s;
+
+  &[data-active] {
+    opacity: 1;
+    fill: var(--text-primary);
+  }
+}
+
+// Center sigil
+.constCoreGlow {
+  animation: breathe 3.4s var(--ease-soft) infinite;
+  pointer-events: none;
+}
+
+.constCoreCenter {
+  fill: var(--bg-elevated);
+  stroke: var(--pink-400);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 14px rgba(244, 122, 160, 0.55));
+}
+
+.constCoreSigil {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  fill: var(--pink-400);
+  filter: drop-shadow(0 0 6px rgba(244, 122, 160, 0.6));
+}
+
+// Skill nodes (HTML overlay)
+.constNode {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.18rem;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: default;
+  pointer-events: auto;
+  z-index: 3;
+  opacity: 0;
+  animation: const-node-pop 0.55s var(--ease-bounce) forwards;
+  transition:
+    transform 0.3s var(--ease-bounce),
+    opacity 0.25s,
+    filter 0.25s;
+
+  &[data-class-root] {
+    cursor: pointer;
+    z-index: 5;
+  }
+
+  &[data-hovered] {
+    z-index: 12;
+    transform: translate(-50%, -50%) scale(1.18);
+  }
+
+  &[data-dimmed] {
+    opacity: 0.22 !important;
+    filter: blur(0.4px) grayscale(0.4);
+  }
+}
+
+@keyframes const-node-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.18);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.constNodeIcon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--node-color);
+  color: #fff;
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.18),
+    0 0 0 3px rgba(255, 255, 255, 0.06),
+    0 0 12px var(--cat-soft);
+  transition:
+    transform 0.35s var(--ease-bounce),
+    box-shadow 0.35s;
+
+  // Class root — bigger gem with halo
+  .constNode[data-class-root] & {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(
+      135deg,
+      var(--cat-color),
+      rgba(255, 255, 255, 0.35)
+    );
+    box-shadow:
+      0 8px 22px var(--cat-soft),
+      0 0 0 6px var(--cat-soft),
+      0 0 30px var(--cat-color),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  // Smaller dots for deeper depths
+  .constNode[data-depth="2"] & {
+    width: 18px;
+    height: 18px;
+  }
+  .constNode[data-depth="3"] & {
+    width: 14px;
+    height: 14px;
+  }
+
+  .constNode[data-hovered] & {
+    transform: rotate(-12deg) scale(1.15);
+    box-shadow:
+      0 6px 16px var(--cat-soft),
+      0 0 0 4px var(--cat-soft),
+      0 0 22px var(--node-color);
+  }
+
+  .constNode[data-class-root][data-hovered] & {
+    box-shadow:
+      0 14px 30px var(--cat-soft),
+      0 0 0 10px var(--cat-soft),
+      0 0 45px var(--cat-color),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+}
+
+.constNodeLabel {
+  display: inline-block;
+  padding: 0.18rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--cat-color);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14);
+  pointer-events: none;
+  animation: const-label-fade 0.25s var(--ease-soft) both;
+
+  .constNode[data-class-root] & {
+    margin-top: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+    border-width: 1.5px;
+    box-shadow:
+      0 6px 14px rgba(0, 0, 0, 0.18),
+      0 0 0 4px var(--cat-soft);
+  }
+}
+
+@keyframes const-label-fade {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// =====================================================
+// CONSTELLATION LEGEND
+// =====================================================
+.constLegend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0 0.5rem;
+  margin-top: 0.2rem;
+}
+
+.constLegendChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem 0.35rem 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--cat-color);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.25s var(--ease-bounce);
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.1),
+    0 0 0 0 var(--cat-soft);
+
+  svg {
+    color: var(--cat-color);
+    transition: transform 0.35s var(--ease-bounce);
+  }
+
+  &:hover,
+  &[data-hovered],
+  &:focus-visible {
+    transform: translateY(-2px);
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+    box-shadow:
+      0 6px 14px rgba(0, 0, 0, 0.16),
+      0 0 0 5px var(--cat-soft);
+
+    svg {
+      transform: rotate(180deg) scale(1.15);
+    }
+  }
+}
+
+.constLegendLabel {
+  letter-spacing: 0.14em;
+}
+
+.constLegendKana {
+  font-family: var(--font-hand);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--cat-color);
 }
 
 // =====================================================
@@ -1239,15 +1871,28 @@
   .categoryNode,
   .edge,
   .skillNode,
-  .kanjiSpine span {
+  .kanjiSpine span,
+  .constellationToggle::before,
+  .constellationTitleSigil,
+  .constStar,
+  .constEdge,
+  .constBridge,
+  .constCoreGlow,
+  .constSectorGlow,
+  .constNode {
     animation: none !important;
   }
-  .edge {
+  .edge,
+  .constEdge {
     stroke-dashoffset: 0;
     opacity: 0.4;
   }
-  .skillNode {
+  .skillNode,
+  .constNode {
     opacity: 1;
     transform: translate(-50%, -50%);
+  }
+  .constBridge {
+    opacity: 0.7;
   }
 }

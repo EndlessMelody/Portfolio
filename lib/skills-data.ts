@@ -60,23 +60,23 @@ export type Skill = {
   id: string;
   name: string;
   icon: IconComponent;
-  color: string;      // brand color
+  color: string; // brand color
   mastery: 1 | 2 | 3 | 4 | 5;
   children?: Skill[];
 };
 
 export type SkillCategory = {
   id: "illusionist" | "architect" | "archivist" | "summoner" | "artificer";
-  label: string;      // RPG class name
-  english: string;    // plain english label
-  kanji: string;      // 2-char kanji
-  sigil: string;      // unicode symbol
-  color: string;      // primary brand color
-  colorSoft: string;  // faded tint
-  icon: LucideIcon;   // class icon (lucide)
-  angle: number;      // degrees from top, CW
-  tagline: string;    // short phrase
-  root: Skill;        // tree root (depth 1)
+  label: string; // RPG class name
+  english: string; // plain english label
+  kanji: string; // 2-char kanji
+  sigil: string; // unicode symbol
+  color: string; // primary brand color
+  colorSoft: string; // faded tint
+  icon: LucideIcon; // class icon (lucide)
+  angle: number; // degrees from top, CW
+  tagline: string; // short phrase
+  root: Skill; // tree root (depth 1)
 };
 
 // Deterministic pseudo-random 1-5 based on skill id string
@@ -351,10 +351,16 @@ function countLeaves(skill: Skill): number {
 // Radii per depth level (root=0)
 const RADII = [0, 170, 130, 100];
 
+// Smaller radii used by the constellation view, where each class is a wedge
+const CONSTELLATION_RADII = [0, 80, 62, 48];
+
 export function layoutRadialTree(
   root: Skill,
   cx = 0,
   cy = 0,
+  arcStart = 0,
+  arcEnd = Math.PI * 2,
+  radii: number[] = RADII,
 ): TreeLayout {
   const nodes: PositionedNode[] = [];
   const edges: TreeLayout["edges"] = [];
@@ -363,8 +369,8 @@ export function layoutRadialTree(
     skill: Skill,
     x: number,
     y: number,
-    arcStart: number,
-    arcEnd: number,
+    a0: number,
+    a1: number,
     depth: number,
     parentId: string | null,
   ) {
@@ -373,12 +379,12 @@ export function layoutRadialTree(
     if (!skill.children || skill.children.length === 0) return;
 
     const totalLeaves = skill.children.reduce((a, c) => a + countLeaves(c), 0);
-    const r = RADII[depth + 1] ?? 80;
+    const r = radii[depth + 1] ?? radii[radii.length - 1] ?? 80;
 
-    let current = arcStart;
+    let current = a0;
     for (const child of skill.children) {
       const childLeaves = countLeaves(child);
-      const arc = (arcEnd - arcStart) * (childLeaves / totalLeaves);
+      const arc = (a1 - a0) * (childLeaves / totalLeaves);
       const midAngle = current + arc / 2;
 
       const childX = x + r * Math.cos(midAngle);
@@ -394,16 +400,149 @@ export function layoutRadialTree(
 
       // shrink the arc a bit so deeper levels don't overlap siblings of uncles
       const shrink = 0.85;
-      const subArcStart = current + arc * (1 - shrink) / 2;
-      const subArcEnd = current + arc * (1 + shrink) / 2;
+      const subArcStart = current + (arc * (1 - shrink)) / 2;
+      const subArcEnd = current + (arc * (1 + shrink)) / 2;
       place(child, childX, childY, subArcStart, subArcEnd, depth + 1, skill.id);
 
       current += arc;
     }
   }
 
-  // Start with full circle
-  place(root, cx, cy, 0, Math.PI * 2, 0, null);
+  place(root, cx, cy, arcStart, arcEnd, 0, null);
 
   return { nodes, edges };
+}
+
+// =====================================================
+// CONSTELLATION — all 5 class trees fused, plus
+// curated cross-class bridges revealing the
+// "multi-class build" of the developer.
+// =====================================================
+
+export type SkillBridge = {
+  fromId: string;
+  toId: string;
+  label: string;
+  // optional — biases the curve so two bridges between the same
+  // pair of clusters don't perfectly overlap
+  curvature?: number;
+};
+
+export const skillBridges: SkillBridge[] = [
+  // Same language, different domains
+  { fromId: "ar-python", toId: "su-pycore", label: "Python", curvature: 0.18 },
+  // Full-stack TypeScript
+  { fromId: "il-ts", toId: "ar-node", label: "TypeScript", curvature: 0.22 },
+  // Next.js ↔ Vercel — perfect host pair
+  { fromId: "il-next", toId: "af-vercel", label: "Deploys", curvature: 0.16 },
+  // FastAPI talks to SQL via SQLAlchemy
+  {
+    fromId: "ar-fastapi",
+    toId: "av-sqlalchemy",
+    label: "API ↔ DB",
+    curvature: 0.2,
+  },
+  // ML deployed in containers
+  {
+    fromId: "su-pytorch",
+    toId: "af-docker",
+    label: "ML deploy",
+    curvature: 0.24,
+  },
+  // Next.js apps love Postgres via Prisma
+  { fromId: "il-next", toId: "av-prisma", label: "ORM", curvature: 0.14 },
+  // GraphQL bridges Frontend & Backend
+  { fromId: "il-react", toId: "ar-graphql", label: "GraphQL", curvature: 0.2 },
+  // Supabase — DB-as-a-service used from the web
+  { fromId: "il-react", toId: "av-supabase", label: "BaaS", curvature: 0.18 },
+];
+
+// Constellation positions every skill from every class on a single canvas.
+// Each class root sits on a pentagon vertex around (0,0); its sub-tree
+// fans outward into a 72° wedge.
+export type ConstellationLayout = {
+  nodes: PositionedNode[]; // every skill, including the 5 class roots
+  edges: TreeLayout["edges"]; // intra-class parent → child
+  bridges: Array<{
+    fromNode: PositionedNode;
+    toNode: PositionedNode;
+    label: string;
+    curvature: number;
+    fromColor: string;
+    toColor: string;
+  }>;
+  classRoots: Array<{
+    catId: SkillCategory["id"];
+    nodeId: string;
+    x: number;
+    y: number;
+    color: string;
+    colorSoft: string;
+    angle: number;
+  }>;
+};
+
+// Distance from canvas center to each class-root gem
+const CLUSTER_ROOT_RADIUS = 220;
+// Wedge width (radians) per class; pentagon sectors are 2π/5
+const CLUSTER_ARC = ((Math.PI * 2) / 5) * 0.92;
+
+export function layoutConstellation(): ConstellationLayout {
+  const nodes: PositionedNode[] = [];
+  const edges: TreeLayout["edges"] = [];
+  const classRoots: ConstellationLayout["classRoots"] = [];
+
+  for (const cat of skillCategories) {
+    // 0° = top, CW. Convert to standard math angle (0 = +x, CCW).
+    const rootMathAngle = ((cat.angle - 90) * Math.PI) / 180;
+    const rx = CLUSTER_ROOT_RADIUS * Math.cos(rootMathAngle);
+    const ry = CLUSTER_ROOT_RADIUS * Math.sin(rootMathAngle);
+
+    // Tree grows outward from canvas center → centerAngle = rootMathAngle
+    const arcStart = rootMathAngle - CLUSTER_ARC / 2;
+    const arcEnd = rootMathAngle + CLUSTER_ARC / 2;
+
+    const sub = layoutRadialTree(
+      cat.root,
+      rx,
+      ry,
+      arcStart,
+      arcEnd,
+      CONSTELLATION_RADII,
+    );
+
+    nodes.push(...sub.nodes);
+    edges.push(...sub.edges);
+
+    classRoots.push({
+      catId: cat.id,
+      nodeId: cat.root.id,
+      x: rx,
+      y: ry,
+      color: cat.color,
+      colorSoft: cat.colorSoft,
+      angle: cat.angle,
+    });
+  }
+
+  // Build a quick id → node map for bridge resolution
+  const byId = new Map<string, PositionedNode>();
+  for (const n of nodes) byId.set(n.skill.id, n);
+
+  const bridges: ConstellationLayout["bridges"] = [];
+  for (const b of skillBridges) {
+    const fromNode = byId.get(b.fromId);
+    const toNode = byId.get(b.toId);
+    if (!fromNode || !toNode) continue;
+    bridges.push({
+      fromNode,
+      toNode,
+      label: b.label,
+      curvature: b.curvature ?? 0.18,
+      fromColor: fromNode.skill.color,
+      toColor: toNode.skill.color,
+    });
+  }
+
+  return { nodes, edges, bridges, classRoots };
 }

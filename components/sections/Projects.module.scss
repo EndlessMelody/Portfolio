@@ -1,7 +1,6 @@
 .projects {
   position: relative;
   padding: 6rem 0 4.5rem;
-  overflow: hidden;
   isolation: isolate;
 }
 
@@ -327,25 +326,16 @@
 }
 
 @keyframes twinkle {
-  0% { transform: scale(0.5) rotate(0deg); opacity: 0.4; filter: drop-shadow(0 0 2px currentColor); }
-  100% { transform: scale(1.1) rotate(15deg); opacity: 1; filter: drop-shadow(0 0 8px currentColor); }
-}
-
-.titleAccent {
-  background: linear-gradient(
-    120deg,
-    var(--pink-500),
-    var(--pink-400) 30%,
-    var(--lavender-300) 55%,
-    var(--blue-400) 80%,
-    var(--blue-500)
-  );
-  background-size: 220% 220%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: gradient-shift 7s ease infinite;
-  filter: drop-shadow(0 6px 20px rgba(244, 122, 160, 0.22));
+  0% {
+    transform: scale(0.5) rotate(0deg);
+    opacity: 0.4;
+    filter: drop-shadow(0 0 2px currentColor);
+  }
+  100% {
+    transform: scale(1.1) rotate(15deg);
+    opacity: 1;
+    filter: drop-shadow(0 0 8px currentColor);
+  }
 }
 
 .subtitle {
@@ -402,7 +392,8 @@
   filter: blur(20px);
 }
 
-.altarRingOuter, .altarRingInner {
+.altarRingOuter,
+.altarRingInner {
   position: absolute;
   border-radius: 50%;
   border: 2px solid transparent;
@@ -427,8 +418,12 @@
 }
 
 @keyframes spin-altar {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .floatingRunes {
@@ -446,14 +441,26 @@
   opacity: 0;
   filter: drop-shadow(0 0 5px var(--pink-500));
   animation: floatRune 15s linear infinite;
-  transform: rotateX(-90deg); /* Counteract the 75deg altar tilt to stand upright */
+  transform: rotateX(
+    -90deg
+  ); /* Counteract the 75deg altar tilt to stand upright */
 }
 
 @keyframes floatRune {
-  0% { transform: translateY(0) rotateX(-90deg) scale(0.5); opacity: 0; }
-  20% { opacity: 0.6; }
-  80% { opacity: 0.6; }
-  100% { transform: translateY(-800px) rotateX(-90deg) scale(1.5); opacity: 0; }
+  0% {
+    transform: translateY(0) rotateX(-90deg) scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-800px) rotateX(-90deg) scale(1.5);
+    opacity: 0;
+  }
 }
 
 .book {
@@ -482,8 +489,13 @@
 }
 
 @keyframes floatBook {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
 }
 
 .leaf {
@@ -501,7 +513,8 @@
   transform: rotateY(-180deg);
 }
 
-.pageFront, .pageBack {
+.pageFront,
+.pageBack {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
@@ -509,13 +522,15 @@
   overflow: hidden;
   background: #0d0d12; /* Solid color to prevent transparent bleed-through */
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .pageFront {
   transform: rotateY(0deg);
   /* Inner shadow imitating the deep spine groove on right pages */
-  box-shadow: inset 30px 0 40px -10px rgba(0,0,0,0.7), 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow:
+    inset 30px 0 40px -10px rgba(0, 0, 0, 0.7),
+    0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .pageBack {
@@ -523,7 +538,9 @@
   /* Flip the border radius for the left pages */
   border-radius: 16px 2px 2px 16px;
   /* Inner shadow imitating the spine groove on left pages */
-  box-shadow: inset -30px 0 40px -10px rgba(0,0,0,0.7), 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow:
+    inset -30px 0 40px -10px rgba(0, 0, 0, 0.7),
+    0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 /* ========================================= */
@@ -544,7 +561,9 @@
 
   /* Leather/Magical cover styling */
   border-left: 20px solid #050508; /* Dark spine */
-  box-shadow: inset 0 0 80px rgba(0,0,0,0.9), inset 5px 0 10px rgba(255,255,255,0.05);
+  box-shadow:
+    inset 0 0 80px rgba(0, 0, 0, 0.9),
+    inset 5px 0 10px rgba(255, 255, 255, 0.05);
 
   .spineTexture {
     position: absolute;
@@ -556,10 +575,10 @@
       0deg,
       transparent,
       transparent 10px,
-      rgba(255,255,255,0.02) 10px,
-      rgba(255,255,255,0.02) 11px
+      rgba(255, 255, 255, 0.02) 10px,
+      rgba(255, 255, 255, 0.02) 11px
     );
-    border-right: 1px solid rgba(255,255,255,0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   .coverCorners {
@@ -574,10 +593,22 @@
       opacity: 0.5;
       filter: drop-shadow(0 0 5px var(--pink-500));
     }
-    .cTl { top: -10px; left: -10px; }
-    .cTr { top: -10px; right: -10px; }
-    .cBl { bottom: -10px; left: -10px; }
-    .cBr { bottom: -10px; right: -10px; }
+    .cTl {
+      top: -10px;
+      left: -10px;
+    }
+    .cTr {
+      top: -10px;
+      right: -10px;
+    }
+    .cBl {
+      bottom: -10px;
+      left: -10px;
+    }
+    .cBr {
+      bottom: -10px;
+      right: -10px;
+    }
   }
 
   .magicSeal {
@@ -616,7 +647,9 @@
     border: 1px solid rgba(244, 122, 160, 0.2);
     backdrop-filter: blur(10px);
     border-radius: 4px;
-    box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(244, 122, 160, 0.05);
+    box-shadow:
+      0 0 30px rgba(0, 0, 0, 0.8),
+      inset 0 0 20px rgba(244, 122, 160, 0.05);
 
     .coverLabel {
       display: block;
@@ -631,7 +664,9 @@
       font-size: 3.5rem;
       font-family: var(--font-display);
       color: white;
-      text-shadow: 0 0 20px rgba(255,255,255,0.4), 0 0 50px rgba(244, 122, 160, 0.4);
+      text-shadow:
+        0 0 20px rgba(255, 255, 255, 0.4),
+        0 0 50px rgba(244, 122, 160, 0.4);
       margin-bottom: 0.5rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -656,16 +691,20 @@
   /* Overlaid on the inline style background */
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(45deg, rgba(0,0,0,0.6), rgba(0,0,0,0.2));
+    background: linear-gradient(45deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.2));
   }
 
   .mysticOverlay {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.8) 100%);
+    background: radial-gradient(
+      circle at center,
+      transparent 30%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
     z-index: 1;
     pointer-events: none;
     mix-blend-mode: multiply;
@@ -673,7 +712,7 @@
 
   .kanjiDeco {
     font-size: 14rem;
-    color: rgba(255,255,255,0.15);
+    color: rgba(255, 255, 255, 0.15);
     font-family: var(--font-display);
     mix-blend-mode: overlay;
     font-weight: 900;
@@ -687,16 +726,29 @@
   padding: 3rem;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, rgba(20, 20, 25, 0.95), rgba(10, 10, 15, 0.98));
+  background: linear-gradient(
+    135deg,
+    rgba(20, 20, 25, 0.95),
+    rgba(10, 10, 15, 0.98)
+  );
   position: relative;
   overflow: hidden;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at top right, rgba(244, 122, 160, 0.08), transparent 50%),
-                radial-gradient(circle at bottom left, rgba(90, 150, 238, 0.08), transparent 50%);
+    background:
+      radial-gradient(
+        circle at top right,
+        rgba(244, 122, 160, 0.08),
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at bottom left,
+        rgba(90, 150, 238, 0.08),
+        transparent 50%
+      );
     pointer-events: none;
   }
 }
@@ -704,7 +756,8 @@
 // =========================================
 // Arcane Page Layout
 // =========================================
-.pageBorderTop, .pageBorderBottom {
+.pageBorderTop,
+.pageBorderBottom {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -712,7 +765,8 @@
   opacity: 0.5;
   margin-bottom: 2rem;
 
-  .cornerL, .cornerR {
+  .cornerL,
+  .cornerR {
     font-size: 1.2rem;
     line-height: 1;
     filter: drop-shadow(0 0 5px var(--pink-400));
@@ -721,7 +775,12 @@
   .line {
     flex-grow: 1;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--pink-400), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--pink-400),
+      transparent
+    );
   }
 }
 
@@ -808,8 +867,8 @@
   .runeTag {
     font-size: 0.75rem;
     padding: 0.4rem 0.9rem;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 2px;
     color: var(--blue-300);
     text-shadow: 0 0 5px rgba(90, 150, 238, 0.4);
@@ -824,8 +883,6 @@
   justify-content: flex-end;
   margin-bottom: 2rem;
 }
-
-
 
 .links {
   display: flex;
@@ -851,12 +908,16 @@
       background: rgba(236, 72, 153, 0.15);
       border-color: rgba(236, 72, 153, 0.5);
       color: var(--pink-300);
-      box-shadow: 0 0 15px rgba(236, 72, 153, 0.2), inset 0 0 10px rgba(236, 72, 153, 0.1);
+      box-shadow:
+        0 0 15px rgba(236, 72, 153, 0.2),
+        inset 0 0 10px rgba(236, 72, 153, 0.1);
       &:hover {
         background: rgba(236, 72, 153, 0.25);
         border-color: rgba(236, 72, 153, 0.8);
         transform: translateY(-2px);
-        box-shadow: 0 0 25px rgba(236, 72, 153, 0.4), inset 0 0 15px rgba(236, 72, 153, 0.2);
+        box-shadow:
+          0 0 25px rgba(236, 72, 153, 0.4),
+          inset 0 0 15px rgba(236, 72, 153, 0.2);
         color: white;
       }
     }
@@ -877,7 +938,7 @@
 
 .navBtn {
   background: var(--bg-elevated);
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
   width: 56px;
   height: 56px;
@@ -888,7 +949,7 @@
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 10;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 
   &:hover:not(:disabled) {
     background: var(--pink-500);

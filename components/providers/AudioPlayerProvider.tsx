@@ -14,8 +14,11 @@ type AudioPlayerCtx = {
   isPlaying: boolean;
   isMuted: boolean;
   hasError: boolean;
+  duration: number; // seconds, 0 until metadata loaded
+  currentTime: number; // seconds
   togglePlay: () => void;
   toggleMute: () => void;
+  seek: (seconds: number) => void;
 };
 
 const AudioPlayerContext = createContext<AudioPlayerCtx | null>(null);
@@ -33,6 +36,8 @@ export function AudioPlayerProvider({
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
 
   // wire audio element listeners once
   useEffect(() => {
@@ -46,17 +51,29 @@ export function AudioPlayerProvider({
       setHasError(true);
       setIsPlaying(false);
     };
+    const onLoadedMeta = () => {
+      if (!Number.isNaN(a.duration) && Number.isFinite(a.duration)) {
+        setDuration(a.duration);
+      }
+    };
+    const onTimeUpdate = () => setCurrentTime(a.currentTime);
 
     a.addEventListener("play", onPlay);
     a.addEventListener("pause", onPause);
     a.addEventListener("ended", onEnded);
     a.addEventListener("error", onError);
+    a.addEventListener("loadedmetadata", onLoadedMeta);
+    a.addEventListener("timeupdate", onTimeUpdate);
+    a.addEventListener("durationchange", onLoadedMeta);
 
     return () => {
       a.removeEventListener("play", onPlay);
       a.removeEventListener("pause", onPause);
       a.removeEventListener("ended", onEnded);
       a.removeEventListener("error", onError);
+      a.removeEventListener("loadedmetadata", onLoadedMeta);
+      a.removeEventListener("timeupdate", onTimeUpdate);
+      a.removeEventListener("durationchange", onLoadedMeta);
     };
   }, []);
 
@@ -89,9 +106,35 @@ export function AudioPlayerProvider({
 
   const toggleMute = useCallback(() => setIsMuted((v) => !v), []);
 
+  const seek = useCallback((seconds: number) => {
+    const a = audioRef.current;
+    if (!a || !Number.isFinite(seconds)) return;
+    const target = Math.max(0, Math.min(a.duration || 0, seconds));
+    a.currentTime = target;
+    setCurrentTime(target);
+  }, []);
+
   const value = useMemo<AudioPlayerCtx>(
-    () => ({ isPlaying, isMuted, hasError, togglePlay, toggleMute }),
-    [isPlaying, isMuted, hasError, togglePlay, toggleMute],
+    () => ({
+      isPlaying,
+      isMuted,
+      hasError,
+      duration,
+      currentTime,
+      togglePlay,
+      toggleMute,
+      seek,
+    }),
+    [
+      isPlaying,
+      isMuted,
+      hasError,
+      duration,
+      currentTime,
+      togglePlay,
+      toggleMute,
+      seek,
+    ],
   );
 
   return (
@@ -102,7 +145,7 @@ export function AudioPlayerProvider({
         ref={audioRef}
         src={src}
         loop
-        preload="none"
+        preload="metadata"
         playsInline
         aria-hidden
       />
@@ -118,8 +161,11 @@ export function useAudioPlayer(): AudioPlayerCtx {
       isPlaying: false,
       isMuted: false,
       hasError: false,
+      duration: 0,
+      currentTime: 0,
       togglePlay: () => {},
       toggleMute: () => {},
+      seek: () => {},
     };
   }
   return ctx;

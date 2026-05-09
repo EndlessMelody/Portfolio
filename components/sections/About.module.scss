@@ -7,7 +7,8 @@
 .about {
   position: relative;
   padding: 3rem 0 4rem;
-  overflow: hidden;
+  // No overflow:hidden — per-element masks handle edge fades;
+  // letting the section breathe allows ambient blend to cross boundaries.
   isolation: isolate;
 }
 
@@ -268,20 +269,18 @@
   font-size: clamp(2rem, 4.2vw, 3.2rem);
   letter-spacing: -0.02em;
   margin: 0;
-  line-height: 1;
-  display: inline-flex;
-  align-items: baseline;
-  justify-content: center;
+  line-height: 1.05;
+  text-align: center;
 }
 
 .titleAccent {
   background: linear-gradient(
     120deg,
-    var(--pink-500),
-    var(--pink-400) 30%,
+    var(--pink-500) 0%,
+    var(--pink-400) 28%,
     var(--lavender-300) 55%,
     var(--blue-400) 80%,
-    var(--blue-500)
+    var(--blue-500) 100%
   );
   background-size: 220% 220%;
   -webkit-background-clip: text;
@@ -289,7 +288,10 @@
   color: transparent;
   animation: gradient-shift 7s ease infinite;
   filter: drop-shadow(0 6px 20px rgba(244, 122, 160, 0.22));
-  margin: 0 0.2em;
+
+  [data-theme="dark"] & {
+    filter: drop-shadow(0 6px 20px rgba(159, 130, 255, 0.28));
+  }
 }
 
 .titlePeriod {

@@ -1,0 +1,134 @@
+// =====================================================
+// Weather Overlay — rain / snow / fog particles
+// =====================================================
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  overflow: hidden;
+}
+
+// ===== Rain =====
+.rain {
+  position: absolute;
+  inset: 0;
+}
+
+.drop {
+  position: absolute;
+  top: -20vh;
+  width: 1px;
+  height: 55px;
+  background: linear-gradient(
+    180deg,
+    rgba(180, 210, 255, 0),
+    rgba(180, 210, 255, 0.55)
+  );
+  transform: rotate(12deg);
+  animation: rain-fall linear infinite;
+  will-change: transform;
+  filter: drop-shadow(0 0 1px rgba(180, 210, 255, 0.6));
+}
+
+.flash {
+  position: absolute;
+  inset: 0;
+  background: rgba(200, 220, 255, 0.15);
+  opacity: 0;
+  animation: lightning 9s infinite;
+}
+
+@keyframes rain-fall {
+  from {
+    transform: translate3d(0, -10vh, 0) rotate(12deg);
+  }
+  to {
+    transform: translate3d(-10vw, 120vh, 0) rotate(12deg);
+  }
+}
+
+@keyframes lightning {
+  0%,
+  92%,
+  100% {
+    opacity: 0;
+  }
+  93% {
+    opacity: 0.35;
+  }
+  94% {
+    opacity: 0;
+  }
+  95% {
+    opacity: 0.5;
+  }
+  96% {
+    opacity: 0;
+  }
+}
+
+// ===== Snow =====
+.snow {
+  position: absolute;
+  inset: 0;
+}
+
+.flake {
+  position: absolute;
+  top: -20px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.95),
+    rgba(200, 220, 255, 0) 75%
+  );
+  filter: drop-shadow(0 0 4px rgba(220, 230, 255, 0.6));
+  animation: snow-fall linear infinite;
+  will-change: transform;
+}
+
+@keyframes snow-fall {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  90% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(var(--drift, 60px), 120vh, 0) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+// ===== Fog =====
+.fog {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 100% 60% at 50% 70%,
+      rgba(220, 220, 230, 0.14),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 80% 40% at 20% 30%,
+      rgba(200, 205, 220, 0.12),
+      transparent 65%
+    );
+  filter: blur(2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drop,
+  .flake,
+  .flash {
+    animation: none;
+    opacity: 0.2;
+  }
+}

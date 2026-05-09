@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import React, { useState, type FormEvent } from "react";
 import { Send, Github, Linkedin, Facebook, Mail } from "lucide-react";
 import { personal } from "@/lib/data";
 import styles from "./Contact.module.scss";
@@ -27,7 +27,9 @@ export function Contact() {
     setStatus("sending");
     // Placeholder: open mail client. Replace with API later.
     const subject = encodeURIComponent(`Hello from ${form.name}`);
-    const body = encodeURIComponent(`${form.message}\n\n— ${form.name} (${form.email})`);
+    const body = encodeURIComponent(
+      `${form.message}\n\n— ${form.name} (${form.email})`,
+    );
     window.location.href = `mailto:${personal.email}?subject=${subject}&body=${body}`;
     setTimeout(() => setStatus("sent"), 600);
   };
@@ -39,22 +41,22 @@ export function Contact() {
       <div className={styles.bgDotsTl} aria-hidden />
       <div className={styles.bgDotsBr} aria-hidden />
       <div className={styles.bgGradient} aria-hidden />
-      
+
       <AnimeOrnaments />
 
       {/* Kanji spine (left) — 終章 = Final Chapter */}
-      <div className={styles.kanjiSpine} aria-hidden>
+      <div className={styles.kanjiSpine} aria-hidden data-parallax="0.18">
         <span>終</span>
         <span>章</span>
       </div>
 
       {/* Issue tag (right) */}
-      <div className={styles.issueTag} aria-hidden>
+      <div className={styles.issueTag} aria-hidden data-parallax="0.1">
         ISSUE 06 · 終章 · 2026
       </div>
 
       <div className="container">
-        <header className={styles.header}>
+        <header className={`${styles.header} reveal`}>
           <div className={styles.chapter}>
             <span className={styles.chapterBar} aria-hidden />
             <span className={styles.chapterNo}>CH.06</span>
@@ -65,7 +67,7 @@ export function Contact() {
           </div>
 
           <h2 className={styles.title}>
-            Establish <span className={styles.titleAccent}>Connection</span>
+            Establish <span className="gradient-text">Connection</span>
           </h2>
           <p className={styles.subtitle}>
             Open to collaborations, freelance, or just a friendly hello.
@@ -73,7 +75,10 @@ export function Contact() {
           </p>
         </header>
 
-        <div className={styles.grid}>
+        <div
+          className={`${styles.grid} reveal`}
+          style={{ "--d": "0.15s" } as React.CSSProperties}
+        >
           <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles.envelope} aria-hidden />
 
@@ -132,17 +137,29 @@ export function Contact() {
             </a>
             <ul className={styles.socials}>
               <li>
-                <a href={personal.socials.github} target="_blank" rel="noreferrer">
+                <a
+                  href={personal.socials.github}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <Github size={18} /> GitHub Repository
                 </a>
               </li>
               <li>
-                <a href={personal.socials.linkedin} target="_blank" rel="noreferrer">
+                <a
+                  href={personal.socials.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <Linkedin size={18} /> LinkedIn Network
                 </a>
               </li>
               <li>
-                <a href={personal.socials.facebook} target="_blank" rel="noreferrer">
+                <a
+                  href={personal.socials.facebook}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <Facebook size={18} /> Facebook Network
                 </a>
               </li>

@@ -1,40 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Menu, X, Sparkles, Volume2, VolumeX } from "lucide-react";
 import { navLinks, personal } from "@/lib/data";
 import { useAudioPlayer } from "@/components/providers/AudioPlayerProvider";
+import { useActiveSection } from "@/lib/hooks";
 import { ThemeToggle } from "./ThemeToggle";
 import styles from "./Navbar.module.scss";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState<string>("#hero");
   const { isMuted, toggleMute } = useAudioPlayer();
+
+  const ids = useMemo(() => navLinks.map((l) => l.href.slice(1)), []);
+  const activeId = useActiveSection(ids);
+  const active = `#${activeId}`;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    const ids = navLinks.map((l) => l.href.slice(1));
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(`#${entry.target.id}`);
-        });
-      },
-      { rootMargin: "-40% 0px -55% 0px", threshold: 0 },
-    );
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
   }, []);
 
   return (
@@ -48,7 +35,9 @@ export function Navbar() {
           <span className={styles.brandIcon} aria-hidden>
             <img src="/logo.jpg" alt="Logo" className={styles.brandImage} />
           </span>
-          <span className={styles.brandName}>{personal.name.split(" ")[0]}</span>
+          <span className={styles.brandName}>
+            {personal.name.split(" ")[0]}
+          </span>
         </a>
 
         <nav className={styles.links} data-open={open ? "true" : undefined}>

@@ -1,0 +1,90 @@
+// =====================================================
+// GitHub Live chip — compact pill with real-time stats
+// =====================================================
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.75rem 0.25rem 0.55rem;
+  margin-bottom: 0.6rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.25s var(--ease-bounce),
+    border-color 0.25s,
+    box-shadow 0.25s;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: var(--pink-300);
+    box-shadow: 0 4px 14px rgba(244, 122, 160, 0.22);
+  }
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+}
+
+.handle {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.sep {
+  opacity: 0.35;
+  font-weight: 400;
+}
+
+.stat {
+  color: var(--text-muted);
+
+  strong {
+    color: var(--pink-500);
+    font-weight: 700;
+    margin-right: 0.15rem;
+  }
+}
+
+.pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ccc;
+  flex-shrink: 0;
+}
+
+.pulseActive {
+  background: #2ecc71;
+  box-shadow: 0 0 6px rgba(46, 204, 113, 0.6);
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(46, 204, 113, 0.5);
+    animation: ping-ring 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+}
+
+@media (max-width: 480px) {
+  .chip {
+    font-size: 0.56rem;
+    padding: 0.2rem 0.55rem 0.2rem 0.45rem;
+  }
+}

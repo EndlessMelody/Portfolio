@@ -1,7 +1,6 @@
 .contact {
   position: relative;
   padding: 6rem 0 4.5rem;
-  overflow: hidden;
   isolation: isolate;
 }
 
@@ -238,31 +237,21 @@
   line-height: 1;
 }
 
-.titleAccent {
-  background: linear-gradient(
-    120deg,
-    var(--blue-500),
-    var(--blue-400) 30%,
-    var(--lavender-300) 55%,
-    var(--pink-400) 80%,
-    var(--pink-500)
-  );
-  background-size: 220% 220%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: gradient-shift 7s ease infinite;
-}
-
 .subtitle {
   font-size: 0.9rem;
   color: var(--text-muted);
 }
 
 @keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 // =====================================================
@@ -296,10 +285,18 @@
 
   // Add a cyber-glass edge
   &::before {
-    content: '';
+    content: "";
     position: absolute;
-    top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(191,219,254,0.5), transparent);
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(191, 219, 254, 0.5),
+      transparent
+    );
   }
 }
 
@@ -307,8 +304,16 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at top right, rgba(255, 209, 220, 0.15), transparent 50%),
-    radial-gradient(ellipse at bottom left, rgba(191, 219, 254, 0.15), transparent 50%);
+    radial-gradient(
+      ellipse at top right,
+      rgba(255, 209, 220, 0.15),
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at bottom left,
+      rgba(191, 219, 254, 0.15),
+      transparent 50%
+    );
   pointer-events: none;
   z-index: 0;
 }
@@ -332,7 +337,7 @@
     gap: 0.5rem;
 
     &::before {
-      content: '>';
+      content: ">";
       color: var(--pink-400);
       opacity: 0.8;
     }
@@ -351,10 +356,13 @@
     font-family: var(--font-mono);
     font-size: 0.9rem;
     resize: vertical;
-    transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+    transition:
+      border-color 0.3s,
+      box-shadow 0.3s,
+      background 0.3s;
 
-    &::placeholder { 
-      color: var(--text-muted); 
+    &::placeholder {
+      color: var(--text-muted);
       font-family: inherit;
     }
 
@@ -390,7 +398,7 @@
 
   // Cool glitchy background slide
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     background: linear-gradient(135deg, var(--blue-500), var(--pink-500));
@@ -426,7 +434,12 @@
 .aside {
   padding: 2.5rem;
   border-radius: var(--radius-xl);
-  background: linear-gradient(135deg, var(--pink-100) 0%, var(--lavender-200) 50%, var(--blue-100) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--pink-100) 0%,
+    var(--lavender-200) 50%,
+    var(--blue-100) 100%
+  );
   border: 1px solid var(--border-default);
   display: flex;
   flex-direction: column;
@@ -435,7 +448,11 @@
   overflow: hidden;
 
   [data-theme="dark"] & {
-    background: linear-gradient(135deg, rgba(255, 159, 184, 0.08), rgba(127, 179, 255, 0.08));
+    background: linear-gradient(
+      135deg,
+      rgba(255, 159, 184, 0.08),
+      rgba(127, 179, 255, 0.08)
+    );
   }
 }
 
@@ -449,7 +466,7 @@
   gap: 0.5rem;
 
   &::before {
-    content: '';
+    content: "";
     display: inline-block;
     width: 12px;
     height: 12px;
@@ -528,6 +545,11 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
