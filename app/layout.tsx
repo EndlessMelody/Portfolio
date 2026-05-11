@@ -51,19 +51,19 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: `${personal.name} — ${personal.title}`,
+  title: "PLDKhoa - Melody",
   description: personal.tagline,
   applicationName: `${personal.name} Portfolio`,
   manifest: "/manifest.webmanifest",
   openGraph: {
-    title: `${personal.name} — ${personal.title}`,
+    title: "PLDKhoa - Melody",
     description: personal.tagline,
     type: "website",
     // Dynamic OG image auto-resolved from `app/opengraph-image.tsx`
   },
   twitter: {
     card: "summary_large_image",
-    title: `${personal.name} — ${personal.title}`,
+    title: "PLDKhoa - Melody",
     description: personal.tagline,
   },
   icons: {
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    title: `${personal.name}`,
+    title: "PLDKhoa - Melody",
     statusBarStyle: "black-translucent",
   },
 };
